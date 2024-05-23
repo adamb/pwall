@@ -1,6 +1,7 @@
 name = "wall"
 workers_dev = true
 main = "worker.js"
+node_compat = true
 compatibility_date = "2023-10-01"
 
 [env.production]
@@ -19,4 +20,3 @@ TESLA_PASSWORD = "your-tesla-password"
 [triggers]
 crons = ["*/5 * * * *"] # This cron expression schedules the worker to run every 5 minutes
 
-node_compat = true
