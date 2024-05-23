@@ -1,6 +1,6 @@
 name = "wall"
 workers_dev = true
-main = "dist/worker.js"
+main = "worker.js"
 compatibility_date = "2023-10-01"
 
 [env.production]
