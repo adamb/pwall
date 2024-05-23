@@ -1,7 +1,6 @@
 const axios = require('axios');
 const dotenv = require('dotenv');
 const https = require('https');
-const fs = require('fs');
 const { KVNamespace } = require('@cloudflare/kv-asset-handler');
 
 dotenv.config();
@@ -23,7 +22,7 @@ const httpsAgent = new https.Agent({
 
 
 async function login() {
-    const url = `https://teg.dev.pr/api/login/Basic`;
+    const url = `https://teg.dev.pr/login/Basic`;
     const headers = {
         'CF-Access-Client-Id': process.env.CF_ACCESS_CLIENT_ID,
         'CF-Access-Client-Secret': process.env.CF_ACCESS_CLIENT_SECRET
@@ -44,7 +43,7 @@ async function login() {
 }
 
 async function getMeterAggregates(cookie) {
-    const url = 'https://' + TESLA_IP + '/api/meters/site';
+    const url = 'https://teg.dev.pr/api/meters/site';
 
     try {
         const response = await axios.get(url, {
