@@ -1,0 +1,17 @@
+name = "wall"
+type = "javascript"
+workers_dev = true
+compatibility_date = "2023-10-01"
+
+[env.production]
+workers_dev = false
+zone_id = "your-zone-id"
+route = "your-domain.com/*"
+
+[[kv_namespaces]]
+binding = "voltage"
+id = "35d9ba93bccd4316b27a48bc72ceddad"
+
+[vars]
+TESLA_IP = "your-tesla-ip"
+TESLA_PASSWORD = "your-tesla-password"
