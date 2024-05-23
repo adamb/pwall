@@ -1,6 +1,6 @@
 name = "wall"
-main = "src/index.js"
 workers_dev = true
+main = "dist/worker.js"
 compatibility_date = "2023-10-01"
 
 [env.production]
@@ -15,8 +15,7 @@ id = "35d9ba93bccd4316b27a48bc72ceddad"
 [vars]
 TESLA_IP = "your-tesla-ip"
 TESLA_PASSWORD = "your-tesla-password"
+
 [[triggers]]
 crons = ["*/5 * * * *"] # This cron expression schedules the worker to run every 5 minutes
 
-[build.upload]
-main = "worker.js"
