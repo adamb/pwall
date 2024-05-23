@@ -1,13 +1,10 @@
 const axios = require('axios');
-const dotenv = require('dotenv');
 const https = require('https');
 const { KVNamespace } = require('@cloudflare/kv-asset-handler');
 
-dotenv.config();
-
-const TESLA_IP = process.env.TESLA_IP || 'default_powerwall_ip';
-const TESLA_USERNAME = process.env.TESLA_USERNAME || 'default_username';
-const TESLA_PASSWORD = process.env.TESLA_PASSWORD || 'default_password';
+const TESLA_IP = env.TESLA_IP || 'default_powerwall_ip';
+const TESLA_USERNAME = env.TESLA_USERNAME || 'default_username';
+const TESLA_PASSWORD = env.TESLA_PASSWORD || 'default_password';
 
 
 console.log('Using Powerwall IP:', TESLA_IP);
@@ -24,8 +21,8 @@ const httpsAgent = new https.Agent({
 async function login() {
     const url = `https://teg.dev.pr/login/Basic`;
     const headers = {
-        'CF-Access-Client-Id': process.env.CF_ACCESS_CLIENT_ID,
-        'CF-Access-Client-Secret': process.env.CF_ACCESS_CLIENT_SECRET
+        'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
+        'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
     };
     const payload = {
         username: 'customer',
@@ -61,7 +58,7 @@ async function main() {
     try {
         const cookie = await login();
 
-        const kv = new KVNamespace({ binding: 'KV', apiToken: process.env.CLOUDFLARE_API_TOKEN });
+        const kv = new KVNamespace({ binding: 'KV', apiToken: env.CLOUDFLARE_API_TOKEN });
 
         // let maxL1 = -Infinity, minL1 = Infinity;
         // let maxL2 = -Infinity, minL2 = Infinity;
