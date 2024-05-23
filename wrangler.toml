@@ -16,6 +16,6 @@ id = "35d9ba93bccd4316b27a48bc72ceddad"
 TESLA_IP = "your-tesla-ip"
 TESLA_PASSWORD = "your-tesla-password"
 
-[[triggers]]
+[triggers]
 crons = ["*/5 * * * *"] # This cron expression schedules the worker to run every 5 minutes
 
