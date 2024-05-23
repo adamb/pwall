@@ -1,5 +1,5 @@
 const axios = require('axios');
-const https = require('https');
+const https = require('node:https');
 const { KVNamespace } = require('@cloudflare/kv-asset-handler');
 
 const TESLA_IP = env.TESLA_IP || 'default_powerwall_ip';

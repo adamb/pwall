@@ -19,3 +19,4 @@ TESLA_PASSWORD = "your-tesla-password"
 [triggers]
 crons = ["*/5 * * * *"] # This cron expression schedules the worker to run every 5 minutes
 
+node_compat = true
