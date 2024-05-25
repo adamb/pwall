@@ -54,6 +54,7 @@ async function getMeterAggregates(cookie) {
     }
 
     const data = await response.json();
+    console.log('Fetched Meter Data:', JSON.stringify(data, null, 2));
     return data;
 }
 
@@ -68,7 +69,9 @@ async function main(env) {
 
         for (let i = 0; i < 10; i++) {
             setTimeout(async () => {
+                console.log('Calling getMeterAggregates...');
                 const meterData = await getMeterAggregates(cookie);
+                console.log('Received Meter Data:', JSON.stringify(meterData, null, 2));
 
                 // Print the entire meterData object
                 // console.log('Meter Data:', JSON.stringify(meterData, null, 2));
