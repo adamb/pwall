@@ -33,6 +33,7 @@ async function login(env) {
     }
 
     const cookie = response.headers.get('set-cookie');
+    console.log('Cookie:', cookie);
     return cookie;
 }
 
