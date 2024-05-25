@@ -16,7 +16,7 @@ async function login(env) {
             'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
         },
         body: JSON.stringify({
-            username: 'customer',
+            username: env.TESLA_LOGIN,
             password: env.TESLA_PASSWORD
         })
     });
@@ -109,7 +109,7 @@ async function main(env) {
             console.error('Error: Cached_readings not found in meterData');
         }
     } catch (error) {
-        console.error('Error:', error.message);
+        console.error('Errorz:', error.message);
     }
 }
 
