@@ -37,7 +37,7 @@ async function login(env) {
     return cookie;
 }
 
-async function getMeterAggregates(cookie) {
+async function getMeterAggregates(cookie, env) {
     const url = 'https://teg.dev.pr/api/meters/site';
 
     const headers = {
@@ -73,7 +73,7 @@ async function main(env) {
         // let maxL1 = -Infinity, minL1 = Infinity;
         // let maxL2 = -Infinity, minL2 = Infinity;
         console.log('Calling getMeterAggregates...');
-        const meterData = await getMeterAggregates(cookie);
+        const meterData = await getMeterAggregates(cookie, env);
         if (meterData) {
             console.log('Received Meter Data:', JSON.stringify(meterData, null, 2));
         } else {
