@@ -2,7 +2,7 @@ const axios = require('axios');
 const { KVNamespace } = require('@cloudflare/kv-asset-handler');
 
 
-async function login() {
+async function login(env) {
     const url = `https://teg.dev.pr/login/Basic`;
     const response = await fetch(url, {
         method: 'POST',
@@ -47,9 +47,9 @@ async function getMeterAggregates(cookie) {
     return data;
 }
 
-async function main() {
+async function main(env) {
     try {
-        const cookie = await login();
+        const cookie = await login(env);
 
         const kv = new KVNamespace({ binding: 'KV', apiToken: env.CLOUDFLARE_API_TOKEN });
 
