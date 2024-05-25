@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { KVNamespace } = require('@cloudflare/kv-asset-handler');
-
+const { connectDatabaseEmulator } = require('firebase/database');
 
 async function login(env) {
     const url = `https://teg.dev.pr/login/Basic`;
@@ -16,7 +16,7 @@ async function login(env) {
             password: env.TESLA_PASSWORD
         })
     });
-
+    console.log('post login fetch' + response)
     if (!response.ok) {
         const errorData = await response.json();
         console.error('Error during login:', errorData);
@@ -24,6 +24,7 @@ async function login(env) {
     }
 
     const cookie = response.headers.get('set-cookie');
+    console.log("got cookie")
     return cookie;
 }
 
@@ -49,49 +50,7 @@ async function getMeterAggregates(cookie) {
 
 async function main(env) {
     // Your main function code
-    try {
-        const cookie = await login(env);
-
-        const kv = new KVNamespace({ binding: 'KV', apiToken: env.CLOUDFLARE_API_TOKEN });
-
-        for (let i = 0; i < 10; i++) {
-            setTimeout(async () => {
-                const meterData = await getMeterAggregates(cookie);
-
-                if (meterData && meterData[0].Cached_readings) {
-                    const v_l1n = meterData[0].Cached_readings.v_l1n;
-                    const v_l2n = meterData[0].Cached_readings.v_l2n;
-                    const lastUpdateTime = meterData[0].Cached_readings.last_phase_voltage_communication_time;
-
-                    await kv.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
-
-                    console.log(`Last Update Time (raw): ${lastUpdateTime}`);
-                    console.log(`Grid Voltage L1: ${v_l1n} V`);
-                    console.log(`Grid Voltage L2: ${v_l2n} V`);
-
-                    const lastUpdateDate = new Date(lastUpdateTime);
-                    const currentDate = new Date();
-                    const timeDifference = Math.abs(currentDate - lastUpdateDate);
-                    const seconds = Math.floor(timeDifference / 1000);
-                    const minutes = Math.floor(seconds / 60);
-                    const hours = Math.floor(minutes / 60);
-                    const days = Math.floor(hours / 24);
-
-                    console.log(`Last voltage update was ${days} days, ${hours % 24} hours, ${minutes % 60} minutes, and ${seconds % 60} seconds ago.`);
-                } else {
-                    console.error('Error: Cached_readings not found in meterData');
-                }
-            }, i * 5000);
-        }
-    } catch (error) {
-        console.error('Error:', error.message);
-    }
-}
-    // Your main function code
-}
-
-module.exports = main;
-    // Your main function code
+    console.log('main');
     try {
         const cookie = await login(env);
 
