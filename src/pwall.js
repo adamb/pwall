@@ -53,8 +53,21 @@ async function getMeterAggregates(cookie, env) {
     });
 
     if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error fetching meter site:', errorData);
+        console.error('Error fetching meter site:', {
+            status: response.status,
+            statusText: response.statusText,
+            headers: [...response.headers.entries()],
+        });
+
+        let errorData;
+        try {
+            errorData = await response.json();
+        } catch (jsonError) {
+            console.error('Error parsing JSON response:', jsonError, 'Response:', response);
+            throw new Error('Failed to fetch meter site and error response could not be parsed');
+        }
+
+        console.error('Error data:', errorData);
         throw new Error('Failed to fetch meter site');
     }
 
