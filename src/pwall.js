@@ -16,7 +16,7 @@ async function login(env) {
             password: env.TESLA_PASSWORD
         })
     });
-    console.log('post login fetch' + JSON.stringify(response))
+    console.log('post login fetch' + JSON.stringify(response.ok))
     if (!response.ok) {
         const errorData = await response.json();
         console.error('Error during login:', errorData);
