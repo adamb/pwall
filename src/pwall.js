@@ -1,5 +1,4 @@
 const axios = require('axios');
-const { KVNamespace } = require('@cloudflare/kv-asset-handler');
 const { connectDatabaseEmulator } = require('firebase/database');
 
 async function login(env) {
@@ -67,7 +66,7 @@ async function main(env) {
     try {
         const cookie = await login(env);
 
-        const kv = new KVNamespace({ binding: 'KV', apiToken: env.CLOUDFLARE_API_TOKEN });
+        const kv = env.KV;
 
         // let maxL1 = -Infinity, minL1 = Infinity;
         // let maxL2 = -Infinity, minL2 = Infinity;
