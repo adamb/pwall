@@ -49,9 +49,6 @@ async function getMeterAggregates(cookie) {
 
 async function main(env) {
     // Your main function code
-}
-
-module.exports = main;
     try {
         const cookie = await login(env);
 
@@ -100,8 +97,6 @@ module.exports = main;
     }
 }
 
-main(process.env);
 
-module.exports = main;
 
-main(process.env);
+
