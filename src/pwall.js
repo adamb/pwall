@@ -3,6 +3,7 @@ const { KVNamespace } = require('@cloudflare/kv-asset-handler');
 const { connectDatabaseEmulator } = require('firebase/database');
 
 async function login(env) {
+    console.log('CF_ACCESS_CLIENT_SECRET:', env.CF_ACCESS_CLIENT_SECRET);
     const url = `https://teg.dev.pr/login/Basic`;
     const headers = {
         'Content-Type': 'application/json',
