@@ -59,6 +59,7 @@ async function getMeterAggregates(cookie) {
 }
 
 async function main(env) {
+    console.log('Starting main function...');
     try {
         const cookie = await login(env);
 
@@ -69,9 +70,13 @@ async function main(env) {
 
         for (let i = 0; i < 10; i++) {
             setTimeout(async () => {
-                console.log('Calling getMeterAggregates...');
+                console.log('Calling getMeterAggregates... Attempt:', i + 1);
                 const meterData = await getMeterAggregates(cookie);
-                console.log('Received Meter Data:', JSON.stringify(meterData, null, 2));
+                if (meterData) {
+                    console.log('Received Meter Data:', JSON.stringify(meterData, null, 2));
+                } else {
+                    console.log('No Meter Data received.');
+                }
 
                 // Print the entire meterData object
                 // console.log('Meter Data:', JSON.stringify(meterData, null, 2));
