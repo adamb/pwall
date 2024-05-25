@@ -6,7 +6,7 @@ var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 
-// .wrangler/tmp/bundle-6GBuiC/checked-fetch.js
+// .wrangler/tmp/bundle-mBQ4Da/checked-fetch.js
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
     (typeof request === "string" ? new Request(request, init) : request).url
@@ -24,7 +24,7 @@ function checkURL(request, init) {
 }
 var urls;
 var init_checked_fetch = __esm({
-  ".wrangler/tmp/bundle-6GBuiC/checked-fetch.js"() {
+  ".wrangler/tmp/bundle-mBQ4Da/checked-fetch.js"() {
     urls = /* @__PURE__ */ new Set();
     globalThis.fetch = new Proxy(globalThis.fetch, {
       apply(target, thisArg, argArray) {
@@ -1813,87 +1813,14 @@ var require_pwall = __commonJS({
     init_modules_watch_stub();
     var axios = require_axios2();
     var { KVNamespace } = require_dist();
-    async function login(env) {
-      const url = `https://teg.dev.pr/login/Basic`;
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "CF-Access-Client-Id": env.CF_ACCESS_CLIENT_ID,
-          "CF-Access-Client-Secret": env.CF_ACCESS_CLIENT_SECRET
-        },
-        body: JSON.stringify({
-          username: "customer",
-          password: env.TESLA_PASSWORD
-        })
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error during login:", errorData);
-        throw new Error("Login failed");
-      }
-      const cookie = response.headers.get("set-cookie");
-      return cookie;
-    }
-    async function getMeterAggregates(cookie) {
-      const url = "https://teg.dev.pr/api/meters/site";
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Cookie": cookie
-        }
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Error fetching meter site:", errorData);
-        throw new Error("Failed to fetch meter site");
-      }
-      const data = await response.json();
-      return data;
-    }
-    async function main2(env) {
-      try {
-        const cookie = await login(env);
-        const kv = new KVNamespace({ binding: "KV", apiToken: env.CLOUDFLARE_API_TOKEN });
-        for (let i = 0; i < 10; i++) {
-          setTimeout(async () => {
-            const meterData = await getMeterAggregates(cookie);
-            if (meterData && meterData[0].Cached_readings) {
-              const v_l1n = meterData[0].Cached_readings.v_l1n;
-              const v_l2n = meterData[0].Cached_readings.v_l2n;
-              const lastUpdateTime = meterData[0].Cached_readings.last_phase_voltage_communication_time;
-              await kv.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
-              console.log(`Last Update Time (raw): ${lastUpdateTime}`);
-              console.log(`Grid Voltage L1: ${v_l1n} V`);
-              console.log(`Grid Voltage L2: ${v_l2n} V`);
-              console.log(`Grid Voltage L1: ${v_l1n} V`);
-              console.log(`Grid Voltage L2: ${v_l2n} V`);
-              const lastUpdateDate = new Date(lastUpdateTime);
-              const currentDate = /* @__PURE__ */ new Date();
-              const timeDifference = Math.abs(currentDate - lastUpdateDate);
-              const seconds = Math.floor(timeDifference / 1e3);
-              const minutes = Math.floor(seconds / 60);
-              const hours = Math.floor(minutes / 60);
-              const days = Math.floor(hours / 24);
-              console.log(`Last voltage update was ${days} days, ${hours % 24} hours, ${minutes % 60} minutes, and ${seconds % 60} seconds ago.`);
-            } else {
-              console.error("Error: Cached_readings not found in meterData");
-            }
-          }, i * 5e3);
-        }
-      } catch (error) {
-        console.error("Error:", error.message);
-      }
-    }
-    main2();
   }
 });
 
-// .wrangler/tmp/bundle-6GBuiC/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-mBQ4Da/middleware-loader.entry.ts
 init_checked_fetch();
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-6GBuiC/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-mBQ4Da/middleware-insertion-facade.js
 init_checked_fetch();
 init_modules_watch_stub();
 
@@ -1965,7 +1892,7 @@ var jsonError = async (request, env, _ctx, middlewareCtx) => {
 };
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-6GBuiC/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-mBQ4Da/middleware-insertion-facade.js
 src_default.middleware = [
   middleware_ensure_req_body_drained_default,
   middleware_scheduled_default,
@@ -1998,7 +1925,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
   ]);
 }
 
-// .wrangler/tmp/bundle-6GBuiC/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-mBQ4Da/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
