@@ -40,11 +40,16 @@ async function login(env) {
 async function getMeterAggregates(cookie) {
     const url = 'https://teg.dev.pr/api/meters/site';
 
+    const headers = {
+        'Content-Type': 'application/json',
+        'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
+        'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET,
+        'Cookie': cookie
+    };
+
     const response = await fetch(url, {
         method: 'GET',
-        headers: {
-            'Cookie': cookie
-        }
+        headers: headers
     });
 
     if (!response.ok) {
