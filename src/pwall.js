@@ -78,6 +78,7 @@ async function main(env) {
                     const lastUpdateTime = meterData[0].Cached_readings.last_phase_voltage_communication_time;
 
                     // Store the values in Cloudflare KV
+                    console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify({ v_l1n, v_l2n })}`);
                     await kv.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
 
                     console.log(`Last Update Time (raw): ${lastUpdateTime}`);
