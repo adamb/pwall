@@ -1,49 +1,53 @@
 const axios = require('axios');
-const https = require('node:https');
 const { KVNamespace } = require('@cloudflare/kv-asset-handler');
 
 const TESLA_PASSWORD = env.TESLA_PASSWORD || 'default_password';
 
-// Load the Powerwall certificate (optional, if using a self-signed certificate)
-const httpsAgent = new https.Agent({
-    rejectUnauthorized: false
-});
 
 
 async function login() {
     const url = `https://teg.dev.pr/login/Basic`;
-    const headers = {
-        'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
-        'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
-    };
-    const payload = {
-        username: 'customer',
-        password: TESLA_PASSWORD
-    };
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
+            'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
+        },
+        body: JSON.stringify({
+            username: 'customer',
+            password: TESLA_PASSWORD
+        })
+    });
 
-    try {
-        const response = await axios.post(url, payload, { httpsAgent, headers });
-        const cookie = response.headers['set-cookie'];
-        return cookie;
-    } catch (error) {
-        console.error('Error during login:', error.response ? error.response.data : error.message);
-        throw error;
+    if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error during login:', errorData);
+        throw new Error('Login failed');
     }
+
+    const cookie = response.headers.get('set-cookie');
+    return cookie;
 }
 
 async function getMeterAggregates(cookie) {
     const url = 'https://teg.dev.pr/api/meters/site';
 
-    try {
-        const response = await axios.get(url, {
-            headers: { 'Cookie': cookie },
-            httpsAgent
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching meter site:', error.response ? error.response.data : error.message);
-        throw error;
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+            'Cookie': cookie
+        }
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error fetching meter site:', errorData);
+        throw new Error('Failed to fetch meter site');
     }
+
+    const data = await response.json();
+    return data;
 }
 
 async function main() {
