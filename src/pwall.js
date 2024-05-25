@@ -21,7 +21,6 @@ async function login(env) {
             password: env.TESLA_PASSWORD
         })
     });
-    console.log('post login fetch' + JSON.stringify(response.ok))
     if (!response.ok) {
         let errorData;
         try {
@@ -35,7 +34,6 @@ async function login(env) {
     }
 
     const cookie = response.headers.get('set-cookie');
-    console.log("got cookie")
     return cookie;
 }
 
@@ -60,9 +58,6 @@ async function getMeterAggregates(cookie) {
 }
 
 async function main(env) {
-    // Your main function code
-    console.log('main');
-    console.log('CF_ACCESS_CLIENT_SECRET:', env.CF_ACCESS_CLIENT_SECRET);
     try {
         const cookie = await login(env);
 
