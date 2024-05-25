@@ -63,6 +63,7 @@ async function getMeterAggregates(cookie) {
 async function main(env) {
     // Your main function code
     console.log('main');
+    console.log('CF_ACCESS_CLIENT_SECRET:', env.CF_ACCESS_CLIENT_SECRET);
     try {
         const cookie = await login(env);
 
