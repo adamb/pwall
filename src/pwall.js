@@ -22,7 +22,7 @@ async function login(env) {
         try {
             errorData = await response.json();
         } catch (jsonError) {
-            console.error('Error parsing JSON response:', jsonError);
+            console.error('Error parsing JSON response:', jsonError, 'Response:', response);
             throw new Error('Login failed and error response could not be parsed');
         }
         console.error('Error during login:', errorData);
