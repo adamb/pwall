@@ -1,9 +1,6 @@
 const axios = require('axios');
 const { KVNamespace } = require('@cloudflare/kv-asset-handler');
 
-const TESLA_PASSWORD = env.TESLA_PASSWORD || 'default_password';
-
-
 
 async function login() {
     const url = `https://teg.dev.pr/login/Basic`;
@@ -16,7 +13,7 @@ async function login() {
         },
         body: JSON.stringify({
             username: 'customer',
-            password: TESLA_PASSWORD
+            password: env.TESLA_PASSWORD
         })
     });
 
