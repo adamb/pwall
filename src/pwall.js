@@ -100,4 +100,6 @@ module.exports = main;
     }
 }
 
+module.exports = main;
+
 main(process.env);
