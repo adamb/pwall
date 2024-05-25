@@ -69,47 +69,44 @@ async function main(env) {
         // let maxL2 = -Infinity, minL2 = Infinity;
         console.log("before loop")
         for (let i = 0; i < 10; i++) {
-            setTimeout(async () => {
-                console.log('Calling getMeterAggregates... Attempt:', i + 1);
-                const meterData = await getMeterAggregates(cookie);
-                if (meterData) {
-                    console.log('Received Meter Data:', JSON.stringify(meterData, null, 2));
-                } else {
-                    console.log('No Meter Data received.');
-                }
+            console.log('Calling getMeterAggregates... Attempt:', i + 1);
+            const meterData = await getMeterAggregates(cookie);
+            if (meterData) {
+                console.log('Received Meter Data:', JSON.stringify(meterData, null, 2));
+            } else {
+                console.log('No Meter Data received.');
+            }
 
-                // Print the entire meterData object
-                // console.log('Meter Data:', JSON.stringify(meterData, null, 2));
-                console.log('Meter Data:', JSON.stringify(meterData, null, 2));
-                if (meterData && meterData[0].Cached_readings) {
-                    const v_l1n = meterData[0].Cached_readings.v_l1n; // Adjust this line based on actual JSON structure
-                    const v_l2n = meterData[0].Cached_readings.v_l2n; // Adjust this line based on actual JSON structure
-                    const lastUpdateTime = meterData[0].Cached_readings.last_phase_voltage_communication_time;
+            // Print the entire meterData object
+            console.log('Meter Data:', JSON.stringify(meterData, null, 2));
+            if (meterData && meterData[0].Cached_readings) {
+                const v_l1n = meterData[0].Cached_readings.v_l1n; // Adjust this line based on actual JSON structure
+                const v_l2n = meterData[0].Cached_readings.v_l2n; // Adjust this line based on actual JSON structure
+                const lastUpdateTime = meterData[0].Cached_readings.last_phase_voltage_communication_time;
 
-                    // Store the values in Cloudflare KV
-                    console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify({ v_l1n, v_l2n })}`);
-                    await kv.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
+                // Store the values in Cloudflare KV
+                console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify({ v_l1n, v_l2n })}`);
+                await kv.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
 
-                    console.log(`Last Update Time (raw): ${lastUpdateTime}`);
-                    console.log(`Grid Voltage L1: ${v_l1n} V`);
-                    console.log(`Grid Voltage L2: ${v_l2n} V`);
-                    console.log(`Grid Voltage L1: ${v_l1n} V`);
-                    console.log(`Grid Voltage L2: ${v_l2n} V`);
+                console.log(`Last Update Time (raw): ${lastUpdateTime}`);
+                console.log(`Grid Voltage L1: ${v_l1n} V`);
+                console.log(`Grid Voltage L2: ${v_l2n} V`);
+                console.log(`Grid Voltage L1: ${v_l1n} V`);
+                console.log(`Grid Voltage L2: ${v_l2n} V`);
 
-                    // Compute and print the time difference
-                    const lastUpdateDate = new Date(lastUpdateTime);
-                    const currentDate = new Date();
-                    const timeDifference = Math.abs(currentDate - lastUpdateDate);
-                    const seconds = Math.floor(timeDifference / 1000);
-                    const minutes = Math.floor(seconds / 60);
-                    const hours = Math.floor(minutes / 60);
-                    const days = Math.floor(hours / 24);
+                // Compute and print the time difference
+                const lastUpdateDate = new Date(lastUpdateTime);
+                const currentDate = new Date();
+                const timeDifference = Math.abs(currentDate - lastUpdateDate);
+                const seconds = Math.floor(timeDifference / 1000);
+                const minutes = Math.floor(seconds / 60);
+                const hours = Math.floor(minutes / 60);
+                const days = Math.floor(hours / 24);
 
-                    console.log(`Last voltage update was ${days} days, ${hours % 24} hours, ${minutes % 60} minutes, and ${seconds % 60} seconds ago.`);
-                } else {
-                    console.error('Error: Cached_readings not found in meterData');
-                }
-            }, i * 5000);
+                console.log(`Last voltage update was ${days} days, ${hours % 24} hours, ${minutes % 60} minutes, and ${seconds % 60} seconds ago.`);
+            } else {
+                console.error('Error: Cached_readings not found in meterData');
+            }
         }
     } catch (error) {
         console.error('Error:', error.message);
