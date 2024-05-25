@@ -18,7 +18,13 @@ async function login(env) {
     });
     console.log('post login fetch' + JSON.stringify(response.ok))
     if (!response.ok) {
-        const errorData = await response.json();
+        let errorData;
+        try {
+            errorData = await response.json();
+        } catch (jsonError) {
+            console.error('Error parsing JSON response:', jsonError);
+            throw new Error('Login failed and error response could not be parsed');
+        }
         console.error('Error during login:', errorData);
         throw new Error('Login failed');
     }
