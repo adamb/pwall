@@ -71,6 +71,7 @@ async function main(env) {
 
                 // Print the entire meterData object
                 // console.log('Meter Data:', JSON.stringify(meterData, null, 2));
+                console.log('Meter Data:', JSON.stringify(meterData, null, 2));
                 if (meterData && meterData[0].Cached_readings) {
                     const v_l1n = meterData[0].Cached_readings.v_l1n; // Adjust this line based on actual JSON structure
                     const v_l2n = meterData[0].Cached_readings.v_l2n; // Adjust this line based on actual JSON structure
