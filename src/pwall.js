@@ -9,7 +9,6 @@ async function login(env) {
         'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
         'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
     };
-    console.log('Request Headers:', JSON.stringify(headers));
     const response = await fetch(url, {
         headers: headers,
         method: 'POST',
