@@ -1,0 +1,1 @@
+This folder contains the built output assets for the worker "wall" generated at 2024-05-23T22:33:02.431Z.

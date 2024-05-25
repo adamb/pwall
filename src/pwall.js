@@ -2,15 +2,7 @@ const axios = require('axios');
 const https = require('node:https');
 const { KVNamespace } = require('@cloudflare/kv-asset-handler');
 
-const TESLA_IP = env.TESLA_IP || 'default_powerwall_ip';
-const TESLA_USERNAME = env.TESLA_USERNAME || 'default_username';
 const TESLA_PASSWORD = env.TESLA_PASSWORD || 'default_password';
-
-
-console.log('Using Powerwall IP:', TESLA_IP);
-console.log('Using Powerwall Password:', TESLA_PASSWORD);
-
-
 
 // Load the Powerwall certificate (optional, if using a self-signed certificate)
 const httpsAgent = new https.Agent({

@@ -10,8 +10,11 @@
  * Learn more at https://developers.cloudflare.com/workers/runtime-apis/scheduled-event/
  */
 
+const { main } = require('./pwall');
+
 export default {
 	async scheduled(controller, env, ctx) {
-		console.log(`Hello World!`);
+		ctx.waitUntil(main());
 	},
 };
+

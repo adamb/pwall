@@ -1,6 +1,6 @@
-name = "wall"
+name = "tegworker"
 workers_dev = true
-main = "worker.js"
+main = "src/index.js"
 node_compat = true
 compatibility_date = "2023-10-01"
 
@@ -12,10 +12,6 @@ route = "your-domain.com/*"
 [[kv_namespaces]]
 binding = "voltage"
 id = "35d9ba93bccd4316b27a48bc72ceddad"
-
-[vars]
-TESLA_IP = "your-tesla-ip"
-TESLA_PASSWORD = "your-tesla-password"
 
 [triggers]
 crons = ["*/5 * * * *"] # This cron expression schedules the worker to run every 5 minutes
