@@ -14,7 +14,7 @@ const { main } = require('./pwall');
 
 export default {
 	async scheduled(controller, env, ctx) {
-		ctx.waitUntil(main());
+		ctx.waitUntil(main(env));
 	},
 };
 
