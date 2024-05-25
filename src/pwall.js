@@ -4,7 +4,14 @@ const { connectDatabaseEmulator } = require('firebase/database');
 
 async function login(env) {
     const url = `https://teg.dev.pr/login/Basic`;
+    const headers = {
+        'Content-Type': 'application/json',
+        'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
+        'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
+    };
+    console.log('Request Headers:', JSON.stringify(headers));
     const response = await fetch(url, {
+        headers: headers,
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
