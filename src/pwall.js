@@ -100,6 +100,8 @@ module.exports = main;
     }
 }
 
+main(process.env);
+
 module.exports = main;
 
 main(process.env);
