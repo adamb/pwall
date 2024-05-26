@@ -8,19 +8,26 @@ async function login(env) {
         'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
         'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
     };
+    const requestBody = JSON.stringify({
+        username: 'customer',
+        password: env.TESLA_PASSWORD,
+        email: 'placeholder@example.com',
+        force_sm_off: false
+    });
+
+    const requestHeaders = {
+        'Content-Type': 'application/json',
+        'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
+        'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
+    };
+
+    console.log('Request Headers:', requestHeaders);
+    console.log('Request Body:', requestBody);
+
     const response = await fetch(url, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
-            'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
-        },
-        body: JSON.stringify({
-            username: 'customer',
-            password: env.TESLA_PASSWORD,
-            email: 'placeholder@example.com',
-            force_sm_off: false
-        })
+        headers: requestHeaders,
+        body: requestBody
     });
     console.log('Response Headers:', [...response.headers.entries()]);
     if (!response.ok) {
