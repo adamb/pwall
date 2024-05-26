@@ -7,7 +7,7 @@ async function login(env) {
     const requestBody = JSON.stringify({
         username: 'customer',
         password: env.TESLA_PASSWORD,
-        email: 'placeholder@example.com',
+        email: 'adam@beguelin.com',
         force_sm_off: false
     });
 
@@ -17,15 +17,12 @@ async function login(env) {
         'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
     };
 
-    console.log('Request Headers:', requestHeaders);
-    console.log('Request Body:', requestBody);
-
     const response = await fetch(url, {
         method: 'POST',
         headers: requestHeaders,
-        body: requestBody,
-        credentials: 'include'
+        body: requestBody
     });
+    
     console.log('Response Headers:', [...response.headers.entries()]);
     if (!response.ok) {
         let errorData;
