@@ -40,6 +40,7 @@ async function login(env) {
         throw new Error('Login failed: No cookies found');
     }
 
+    console.log('All cookies:', cookies);
     const authCookie = cookies.split(';').find(cookie => cookie.includes('AuthCookie'));
     if (!authCookie) {
         console.error('AuthCookie not found in the response cookies:', cookies);
