@@ -25,9 +25,16 @@ async function login(env) {
         body: requestBody
     });
     
-    const responseBody = await response.json();
+    const contentType = response.headers.get('content-type');
+    let responseBody;
+    if (contentType && contentType.includes('application/json')) {
+        responseBody = await response.json();
+        console.log('Response JSON:', responseBody);
+    } else {
+        responseBody = await response.text();
+        console.log('Response Text:', responseBody);
+    }
     console.log('Response Headers:', [...response.headers.entries()]);
-    console.log('Response JSON:', responseBody);
     if (!response.ok) {
         let errorData;
         try {
