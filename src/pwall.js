@@ -20,6 +20,14 @@ async function login(env) {
     console.log('Request Body:', requestBody);
     console.log('Request Headers:', requestHeaders);
 
+    const curlCommand = `curl -X POST ${url} \\
+    -H "Content-Type: application/json" \\
+    -H "CF-Access-Client-Id: ${env.CF_ACCESS_CLIENT_ID}" \\
+    -H "CF-Access-Client-Secret: ${env.CF_ACCESS_CLIENT_SECRET}" \\
+    -d '${requestBody}'`;
+
+    console.log('Equivalent cURL command:', curlCommand);
+
     const response = await fetch(url, {
         method: 'POST',
         headers: requestHeaders,
