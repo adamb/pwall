@@ -30,10 +30,11 @@ async function login(env) {
         headers: requestHeaders,
         body: requestBody
     });
-    
 
-        responseBody = await response.json();
-        console.log('Response JSON:', responseBody);
+    console.log('Response:', response);
+
+    const responseBody = await response.json();
+    console.log('Response JSON:', responseBody);
 
     if (!response.ok) {
         let errorData;
