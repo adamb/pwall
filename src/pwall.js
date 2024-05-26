@@ -18,6 +18,7 @@ async function login(env) {
     };
 
     console.log('Request Body:', requestBody);
+    console.log('Request Headers:', requestHeaders);
 
     const response = await fetch(url, {
         method: 'POST',
