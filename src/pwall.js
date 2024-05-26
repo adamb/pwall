@@ -2,7 +2,7 @@ const axios = require('axios');
 const { connectDatabaseEmulator } = require('firebase/database');
 
 async function login(env) {
-    const url = `https://teg.dev.pr/login/Basic`;
+    const url = `https://teg.dev.pr/api/login/Basic`;
 
     const requestBody = JSON.stringify({
         username: 'customer',
@@ -16,9 +16,6 @@ async function login(env) {
         'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
         'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
     };
-
-    console.log('Request Body:', requestBody);
-    console.log('Request Headers:', requestHeaders);
 
     const curlCommand = `curl -X POST ${url} \\
     -H "Content-Type: application/json" \\
@@ -34,16 +31,10 @@ async function login(env) {
         body: requestBody
     });
     
-    const contentType = response.headers.get('content-type');
-    let responseBody;
-    if (contentType && contentType.includes('application/json')) {
+
         responseBody = await response.json();
         console.log('Response JSON:', responseBody);
-    } else {
-        responseBody = await response.text();
-        console.log('Response Text:', responseBody);
-    }
-    console.log('Response Headers:', [...response.headers.entries()]);
+
     if (!response.ok) {
         let errorData;
         try {
@@ -56,22 +47,9 @@ async function login(env) {
         throw new Error('Login failed');
     }
 
-    console.log('Response Headers:', [...response.headers.entries()]);
-    const cookies = response.headers.get('set-cookie');
-    if (!cookies) {
-        console.error('No cookies found in the response headers:', cookies);
-        throw new Error('Login failed: No cookies found');
-    }
-
-    console.log('All cookies:', cookies);
-    const authCookie = cookies.split(';').find(cookie => cookie.includes('AuthCookie'));
-    if (!authCookie) {
-        console.error('AuthCookie not found in the response cookies:', cookies);
-        throw new Error('Login failed: AuthCookie not found');
-    }
-
-    console.log('AuthCookie:', authCookie);
-    return authCookie;
+    const token = response.token
+    
+    return token;
 }
 
 async function getMeterAggregates(cookie, env) {
