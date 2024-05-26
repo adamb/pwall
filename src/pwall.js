@@ -17,6 +17,8 @@ async function login(env) {
         'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
     };
 
+    console.log('Request Body:', requestBody);
+
     const curlCommand = `curl -X POST ${url} \\
     -H "Content-Type: application/json" \\
     -H "CF-Access-Client-Id: ${env.CF_ACCESS_CLIENT_ID}" \\
