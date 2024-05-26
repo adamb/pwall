@@ -23,7 +23,9 @@ async function login(env) {
         body: requestBody
     });
     
+    const responseBody = await response.text();
     console.log('Response Headers:', [...response.headers.entries()]);
+    console.log('Response Body:', responseBody);
     if (!response.ok) {
         let errorData;
         try {
