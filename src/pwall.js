@@ -34,13 +34,20 @@ async function login(env) {
         throw new Error('Login failed');
     }
 
-    const cookie = response.headers.get('set-cookie');
-    if (!cookie || !cookie.includes('AuthCookie')) {
-        console.error('AuthCookie not found in the response cookies:', cookie);
+    const cookies = response.headers.get('set-cookie');
+    if (!cookies) {
+        console.error('No cookies found in the response headers:', cookies);
+        throw new Error('Login failed: No cookies found');
+    }
+
+    const authCookie = cookies.split(';').find(cookie => cookie.includes('AuthCookie'));
+    if (!authCookie) {
+        console.error('AuthCookie not found in the response cookies:', cookies);
         throw new Error('Login failed: AuthCookie not found');
     }
-    console.log('AuthCookie:', cookie);
-    return cookie;
+
+    console.log('AuthCookie:', authCookie);
+    return authCookie;
 }
 
 async function getMeterAggregates(cookie, env) {
