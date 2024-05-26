@@ -17,6 +17,8 @@ async function login(env) {
         'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
     };
 
+    console.log('Request Body:', requestBody);
+
     const response = await fetch(url, {
         method: 'POST',
         headers: requestHeaders,
