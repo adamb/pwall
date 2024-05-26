@@ -35,7 +35,11 @@ async function login(env) {
     }
 
     const cookie = response.headers.get('set-cookie');
-    console.log('Cookie:', cookie);
+    if (!cookie || !cookie.includes('AuthCookie')) {
+        console.error('AuthCookie not found in the response cookies:', cookie);
+        throw new Error('Login failed: AuthCookie not found');
+    }
+    console.log('AuthCookie:', cookie);
     return cookie;
 }
 
