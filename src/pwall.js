@@ -16,8 +16,10 @@ async function login(env) {
             'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
         },
         body: JSON.stringify({
-            username: env.TESLA_LOGIN,
-            password: env.TESLA_PASSWORD
+            username: 'customer',
+            password: env.TESLA_PASSWORD,
+            email: 'placeholder@example.com',
+            force_sm_off: false
         })
     });
     if (!response.ok) {
