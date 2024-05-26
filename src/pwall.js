@@ -3,11 +3,7 @@ const { connectDatabaseEmulator } = require('firebase/database');
 
 async function login(env) {
     const url = `https://teg.dev.pr/login/Basic`;
-    const headers = {
-        'Content-Type': 'application/json',
-        'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
-        'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
-    };
+
     const requestBody = JSON.stringify({
         username: 'customer',
         password: env.TESLA_PASSWORD,
