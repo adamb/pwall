@@ -22,6 +22,7 @@ async function login(env) {
             force_sm_off: false
         })
     });
+    console.log('Response Headers:', [...response.headers.entries()]);
     if (!response.ok) {
         let errorData;
         try {
@@ -34,6 +35,7 @@ async function login(env) {
         throw new Error('Login failed');
     }
 
+    console.log('Response Headers:', [...response.headers.entries()]);
     const cookies = response.headers.get('set-cookie');
     if (!cookies) {
         console.error('No cookies found in the response headers:', cookies);
