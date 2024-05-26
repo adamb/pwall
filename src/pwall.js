@@ -23,7 +23,8 @@ async function login(env) {
     const response = await fetch(url, {
         method: 'POST',
         headers: requestHeaders,
-        body: requestBody
+        body: requestBody,
+        credentials: 'include'
     });
     console.log('Response Headers:', [...response.headers.entries()]);
     if (!response.ok) {
