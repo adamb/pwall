@@ -99,14 +99,14 @@ async function getMeterAggregates(cookie, env) {
 async function main(env) {
     console.log('Starting main function...');
     try {
-        const cookie = await login(env);
+        const token = await login(env);
 
         const kv = env.KV;
 
         // let maxL1 = -Infinity, minL1 = Infinity;
         // let maxL2 = -Infinity, minL2 = Infinity;
         console.log('Calling getMeterAggregates...');
-        const meterData = await getMeterAggregates(cookie, env);
+        const meterData = await getMeterAggregates(token, env);
         if (meterData) {
             console.log('Received Meter Data:', JSON.stringify(meterData, null, 2));
         } else {
