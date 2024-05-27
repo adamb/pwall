@@ -140,7 +140,7 @@ async function main(env) {
             console.error('Error: Cached_readings not found in meterData');
         }
     } catch (error) {
-        console.error('Errorz:', error.message);
+        console.error('Errors:', error.message);
     }
 }
 
