@@ -58,14 +58,14 @@ async function login(env) {
     return token;
 }
 
-async function getMeterAggregates(cookie, env) {
+async function getMeterAggregates(token, env) {
     const url = 'https://teg.dev.pr/api/meters/site';
 
     const headers = {
         'Content-Type': 'application/json',
         'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
         'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET,
-        'Cookie': cookie
+        'Cookie': token
     };
 
     const response = await fetch(url, {
@@ -77,7 +77,7 @@ async function getMeterAggregates(cookie, env) {
     -H "Content-Type: application/json" \\
     -H "CF-Access-Client-Id: ${env.CF_ACCESS_CLIENT_ID}" \\
     -H "CF-Access-Client-Secret: ${env.CF_ACCESS_CLIENT_SECRET}" \\
-    -H "Cookie: ${cookie}"`;
+    -H "Cookie: ${token}"`;
 
     console.log('Equivalent cURL command:', curlCommand);
 
