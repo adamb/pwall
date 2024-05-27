@@ -36,9 +36,7 @@ async function login(env) {
         throw new Error('Login failed');
     }
     
-    const responseBody = await response.json();
-    const token = responseBody.token;
-    return token;
+    return (await response.json()).token;
 }
 
 async function getMeterAggregates(token, env) {
