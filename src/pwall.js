@@ -4,8 +4,6 @@ const { connectDatabaseEmulator } = require('firebase/database');
 async function login(env) {
     const url = `https://teg.dev.pr/api/login/Basic`;
 
-    console.log('TESLA_PASSWORD:', env.TESLA_PASSWORD);
-
     const requestBody = JSON.stringify({
         username: 'customer',
         password: env.TESLA_PASSWORD,
@@ -18,17 +16,6 @@ async function login(env) {
         'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
         'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET
     };
-
-    console.log('Request Body:', requestBody);
-
-    const curlCommand = `curl -X POST ${url} \\
-    -H "Content-Type: application/json" \\
-    -H "CF-Access-Client-Id: ${env.CF_ACCESS_CLIENT_ID}" \\
-    -H "CF-Access-Client-Secret: ${env.CF_ACCESS_CLIENT_SECRET}" \\
-    -d '${requestBody}'`;
-
-    console.log('Equivalent cURL command:', curlCommand);
-
 
     const response = await fetch(url, {
         method: 'POST',
@@ -48,13 +35,9 @@ async function login(env) {
         console.error('Error during login:', errorData);
         throw new Error('Login failed');
     }
-
+    
     const responseBody = await response.json();
-    console.log('Response Body:', responseBody);
-
     const token = responseBody.token;
-    console.log('Token:', token);
-
     return token;
 }
 
@@ -72,14 +55,6 @@ async function getMeterAggregates(token, env) {
         method: 'GET',
         headers: headers
     });
-
-    const curlCommand = `curl -X GET ${url} \\
-    -H "Content-Type: application/json" \\
-    -H "CF-Access-Client-Id: ${env.CF_ACCESS_CLIENT_ID}" \\
-    -H "CF-Access-Client-Secret: ${env.CF_ACCESS_CLIENT_SECRET}" \\
-    -H "Authorization: Bearer ${token}"`;
-
-    console.log('Equivalent cURL command:', curlCommand);
 
     if (!response.ok) {
         console.error('Error fetching meter site:', {
@@ -101,7 +76,6 @@ async function getMeterAggregates(token, env) {
     }
 
     const data = await response.json();
-    console.log('Fetched Meter Data:', JSON.stringify(data, null, 2));
     return data;
 }
 
