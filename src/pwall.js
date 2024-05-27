@@ -48,9 +48,11 @@ async function login(env) {
         throw new Error('Login failed');
     }
 
-    console.log('Response:', response);
+    const responseBody = await response.json();
+    console.log('Response Body:', responseBody);
 
-    const token = response.token
+    const token = responseBody.token;
+    console.log('Token:', token);
 
     return token;
 }
