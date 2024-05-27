@@ -29,13 +29,6 @@ async function login(env) {
 
     console.log('Equivalent cURL command:', curlCommand);
 
-    const curlCommand = `curl -X GET ${url} \\
-    -H "Content-Type: application/json" \\
-    -H "CF-Access-Client-Id: ${env.CF_ACCESS_CLIENT_ID}" \\
-    -H "CF-Access-Client-Secret: ${env.CF_ACCESS_CLIENT_SECRET}" \\
-    -H "Cookie: ${cookie}"`;
-
-    console.log('Equivalent cURL command:', curlCommand);
 
     const response = await fetch(url, {
         method: 'POST',
@@ -79,6 +72,14 @@ async function getMeterAggregates(cookie, env) {
         method: 'GET',
         headers: headers
     });
+
+    const curlCommand = `curl -X GET ${url} \\
+    -H "Content-Type: application/json" \\
+    -H "CF-Access-Client-Id: ${env.CF_ACCESS_CLIENT_ID}" \\
+    -H "CF-Access-Client-Secret: ${env.CF_ACCESS_CLIENT_SECRET}" \\
+    -H "Cookie: ${cookie}"`;
+
+    console.log('Equivalent cURL command:', curlCommand);
 
     if (!response.ok) {
         console.error('Error fetching meter site:', {
