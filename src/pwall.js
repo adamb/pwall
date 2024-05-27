@@ -65,7 +65,7 @@ async function getMeterAggregates(token, env) {
         'Content-Type': 'application/json',
         'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
         'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET,
-        'Cookie': token
+        'token': token
     };
 
     const response = await fetch(url, {
@@ -77,7 +77,7 @@ async function getMeterAggregates(token, env) {
     -H "Content-Type: application/json" \\
     -H "CF-Access-Client-Id: ${env.CF_ACCESS_CLIENT_ID}" \\
     -H "CF-Access-Client-Secret: ${env.CF_ACCESS_CLIENT_SECRET}" \\
-    -H "Cookie: ${token}"`;
+    -H "token: ${token}"`;
 
     console.log('Equivalent cURL command:', curlCommand);
 
