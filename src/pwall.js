@@ -80,6 +80,8 @@ async function getMeterAggregates(token, env) {
 async function countKeysInKV(kv) {
     if (kv && typeof kv.list === 'function') {
         const keys = await kv.list();
+        console.log('Type of keys:', typeof keys);
+        console.log('Keys content:', keys);
         if (Array.isArray(keys)) {
             console.log('Keys and values in KV store:');
             for (const key of keys) {
