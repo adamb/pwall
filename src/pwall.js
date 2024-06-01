@@ -101,9 +101,13 @@ async function main(env) {
             const v_l2n = meterData[0].Cached_readings.v_l2n; // Adjust this line based on actual JSON structure
             const lastUpdateTime = meterData[0].Cached_readings.last_phase_voltage_communication_time;
 
-            // Store the values in Cloudflare KV
-            console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify({ v_l1n, v_l2n })}`);
-            await kv.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
+            if (kv && typeof kv.put === 'function') {
+                // Store the values in Cloudflare KV
+                console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify({ v_l1n, v_l2n })}`);
+                await kv.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
+            } else {
+                console.error('Error: KV storage is not properly initialized.');
+            }
 
             console.log(`Last Update Time (raw): ${lastUpdateTime}`);
             console.log(`Grid Voltage L1: ${v_l1n} V`);
