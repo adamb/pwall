@@ -80,12 +80,17 @@ async function getMeterAggregates(token, env) {
 async function countKeysInKV(kv) {
     if (kv && typeof kv.list === 'function') {
         const keys = await kv.list();
-        console.log('Keys and values in KV store:');
-        for (const key of keys) {
-            const value = await kv.get(key);
-            console.log(`Key: ${key}, Value: ${value}`);
+        if (Array.isArray(keys)) {
+            console.log('Keys and values in KV store:');
+            for (const key of keys) {
+                const value = await kv.get(key);
+                console.log(`Key: ${key}, Value: ${value}`);
+            }
+            return keys.length;
+        } else {
+            console.error('Error: KV list method did not return an array.');
+            return 0;
         }
-        return keys.length;
     } else {
         console.error('Error: KV storage is not properly initialized or does not support listing keys.');
         return 0;
