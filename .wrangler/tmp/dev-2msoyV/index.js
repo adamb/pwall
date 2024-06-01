@@ -6,7 +6,7 @@ var __commonJS = (cb, mod) => function __require() {
   return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
 };
 
-// .wrangler/tmp/bundle-scaX0P/checked-fetch.js
+// .wrangler/tmp/bundle-5oZwEm/checked-fetch.js
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
     (typeof request === "string" ? new Request(request, init) : request).url
@@ -24,7 +24,7 @@ function checkURL(request, init) {
 }
 var urls;
 var init_checked_fetch = __esm({
-  ".wrangler/tmp/bundle-scaX0P/checked-fetch.js"() {
+  ".wrangler/tmp/bundle-5oZwEm/checked-fetch.js"() {
     urls = /* @__PURE__ */ new Set();
     globalThis.fetch = new Proxy(globalThis.fetch, {
       apply(target, thisArg, argArray) {
@@ -14627,25 +14627,52 @@ var require_pwall = __commonJS({
       const data = await response.json();
       return data;
     }
+    async function countKeysInKV(kv) {
+      if (kv && typeof kv.list === "function") {
+        const keys = await kv.list({ prefix: "2024-06-01T07" });
+        console.log("Type of keys:", typeof keys);
+        console.log("Keys content:", keys);
+        if (Array.isArray(keys)) {
+          console.log("Keys and values in KV store:");
+          for (const key of keys) {
+            const value = await kv.get(key);
+            console.log(`Key: ${key}, Value: ${value}`);
+          }
+          return keys.length;
+        } else {
+          console.error("Error: KV list method did not return an array.");
+          return 0;
+        }
+      } else {
+        console.error("Error: KV storage is not properly initialized or does not support listing keys.");
+        return 0;
+      }
+    }
     async function main2(env) {
+      console.log("Starting main function...");
       console.log("Starting main function...");
       try {
         const token = await login(env);
-        const kv = env.KV;
+        const voltage = env.voltage;
         console.log("Calling getMeterAggregates...");
         const meterData = await getMeterAggregates(token, env);
         if (meterData) {
-          console.log("Received Meter Data:", JSON.stringify(meterData, null, 2));
+          console.log("Received Meter Data");
         } else {
           console.log("No Meter Data received.");
         }
-        console.log("Meter Data:", JSON.stringify(meterData, null, 2));
         if (meterData && meterData[0].Cached_readings) {
           const v_l1n = meterData[0].Cached_readings.v_l1n;
           const v_l2n = meterData[0].Cached_readings.v_l2n;
           const lastUpdateTime = meterData[0].Cached_readings.last_phase_voltage_communication_time;
-          console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify({ v_l1n, v_l2n })}`);
-          await kv.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
+          if (voltage) {
+            console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify({ v_l1n, v_l2n })}`);
+            await voltage.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
+            const keyCount = await countKeysInKV(voltage);
+            console.log(`Number of keys in KV store: ${keyCount}`);
+          } else {
+            console.error("Error: KV storage is not properly initialized.");
+          }
           console.log(`Last Update Time (raw): ${lastUpdateTime}`);
           console.log(`Grid Voltage L1: ${v_l1n} V`);
           console.log(`Grid Voltage L2: ${v_l2n} V`);
@@ -14668,11 +14695,11 @@ var require_pwall = __commonJS({
   }
 });
 
-// .wrangler/tmp/bundle-scaX0P/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-5oZwEm/middleware-loader.entry.ts
 init_checked_fetch();
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-scaX0P/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-5oZwEm/middleware-insertion-facade.js
 init_checked_fetch();
 init_modules_watch_stub();
 
@@ -14744,7 +14771,7 @@ var jsonError = async (request, env, _ctx, middlewareCtx) => {
 };
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-scaX0P/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-5oZwEm/middleware-insertion-facade.js
 src_default.middleware = [
   middleware_ensure_req_body_drained_default,
   middleware_scheduled_default,
@@ -14777,7 +14804,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
   ]);
 }
 
-// .wrangler/tmp/bundle-scaX0P/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-5oZwEm/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
