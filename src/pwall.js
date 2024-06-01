@@ -77,7 +77,18 @@ async function getMeterAggregates(token, env) {
     return data;
 }
 
+async function countKeysInKV(kv) {
+    if (kv && typeof kv.list === 'function') {
+        const keys = await kv.list();
+        return keys.length;
+    } else {
+        console.error('Error: KV storage is not properly initialized or does not support listing keys.');
+        return 0;
+    }
+}
+
 async function main(env) {
+    console.log('Starting main function...');
     console.log('Starting main function...');
     try {
         const token = await login(env);
@@ -105,6 +116,8 @@ async function main(env) {
                 // Store the values in Cloudflare KV
                 console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify({ v_l1n, v_l2n })}`);
                 await voltage.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
+                const keyCount = await countKeysInKV(voltage);
+                console.log(`Number of keys in KV store: ${keyCount}`);
             } else {
                 console.error('Error: KV storage is not properly initialized.');
             }
