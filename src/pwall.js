@@ -80,6 +80,7 @@ async function getMeterAggregates(token, env) {
 async function countKeysInKV(kv) {
     if (kv && typeof kv.list === 'function') {
         const keys = await kv.list();
+        console.log('Keys in KV store:', keys);
         return keys.length;
     } else {
         console.error('Error: KV storage is not properly initialized or does not support listing keys.');
