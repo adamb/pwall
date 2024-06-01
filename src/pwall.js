@@ -82,7 +82,7 @@ async function main(env) {
     try {
         const token = await login(env);
 
-        const kv = env.KV;
+        const voltage = env.voltage;
 
         // let maxL1 = -Infinity, minL1 = Infinity;
         // let maxL2 = -Infinity, minL2 = Infinity;
@@ -101,10 +101,10 @@ async function main(env) {
             const v_l2n = meterData[0].Cached_readings.v_l2n; // Adjust this line based on actual JSON structure
             const lastUpdateTime = meterData[0].Cached_readings.last_phase_voltage_communication_time;
 
-            if (kv && typeof kv.put === 'function') {
+            if (voltage) {
                 // Store the values in Cloudflare KV
                 console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify({ v_l1n, v_l2n })}`);
-                await kv.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
+                await voltage.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
             } else {
                 console.error('Error: KV storage is not properly initialized.');
             }
