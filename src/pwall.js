@@ -79,7 +79,7 @@ async function getMeterAggregates(token, env) {
 
 async function countKeysInKV(kv) {
     if (kv && typeof kv.list === 'function') {
-        const keys = await kv.list();
+        const keys = await kv.list({ prefix: '2024-06-01T07' });
         console.log('Type of keys:', typeof keys);
         console.log('Keys content:', keys);
         if (Array.isArray(keys)) {
