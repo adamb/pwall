@@ -27,7 +27,7 @@ async function handleFetch(request,env) {
         return new Response('KV storage is not properly initialized.', { status: 500 });
     }
 
-    const listResult = await voltage.list({ limit: 1 });
+    const listResult = await voltage.list({ limit: 4 });
     if (!listResult || !listResult.keys || listResult.keys.length === 0) {
         return new Response('No keys found in KV storage.', { status: 404 });
     }
