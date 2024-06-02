@@ -124,7 +124,7 @@ async function main(env) {
                 // Store the entire Cached_readings in Cloudflare KV
                 await voltage.put(lastUpdateTime, JSON.stringify(cachedReadings));
                 let result = await voltage.get(lastUpdateTime)
-                console.log('Result form voltage: ' + result)
+                console.log('Result from voltage:', JSON.stringify(JSON.parse(result), null, 2));
 
             } else {
                 console.error('Error: KV storage is not properly initialized.');
