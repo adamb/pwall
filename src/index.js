@@ -21,7 +21,7 @@ export default {
 	},
 };
 
-async function handleFetch(request) {
+async function handleFetch(request,env) {
     const voltage = env.voltage;
     if (!voltage) {
         return new Response('KV storage is not properly initialized.', { status: 500 });
