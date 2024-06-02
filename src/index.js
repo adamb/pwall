@@ -32,15 +32,14 @@ async function handleFetch(request,env) {
         return new Response('No keys found in KV storage.', { status: 404 });
     }
 
-    const mostRecentKey = listResult.keys[0].name;
-    const mostRecentValue = await voltage.get(mostRecentKey);
-
-    if (!mostRecentValue) {
-        return new Response('No value found for the most recent key.', { status: 404 });
+    let allKeysValues = {};
+    for (const key of listResult.keys) {
+        const value = await voltage.get(key.name);
+        allKeysValues[key.name] = JSON.parse(value);
     }
 
-    const prettyPrintedValue = JSON.stringify(JSON.parse(mostRecentValue), null, 2);
-    return new Response(prettyPrintedValue, { status: 200, headers: { 'Content-Type': 'application/json' } });
+    const prettyPrintedValues = JSON.stringify(allKeysValues, null, 2);
+    return new Response(prettyPrintedValues, { status: 200, headers: { 'Content-Type': 'application/json' } });
 }
 
 
