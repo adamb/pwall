@@ -27,12 +27,12 @@ async function handleFetch(request,env) {
         return new Response('KV storage is not properly initialized.', { status: 500 });
     }
 
-    const keys = await voltage.list();
-    if (!Array.isArray(keys) || keys.length === 0) {
+    const listResult = await voltage.list();
+    if (!listResult || !listResult.keys || listResult.keys.length === 0) {
         return new Response('No keys found in KV storage.', { status: 404 });
     }
 
-    const mostRecentKey = keys.sort().pop();
+    const mostRecentKey = listResult.keys.sort((a, b) => a.name.localeCompare(b.name)).pop().name;
     const mostRecentValue = await voltage.get(mostRecentKey);
 
     if (!mostRecentValue) {
