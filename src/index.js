@@ -27,7 +27,9 @@ async function handleFetch(request,env) {
         return new Response('KV storage is not properly initialized.', { status: 500 });
     }
 
-    const listResult = await voltage.list({ limit: 4 });
+    const currentDate = new Date();
+    const currentHourPrefix = currentDate.toISOString().slice(0, 13); // Get the current date and hour in ISO format
+    const listResult = await voltage.list({ prefix: currentHourPrefix });
     if (!listResult || !listResult.keys || listResult.keys.length === 0) {
         return new Response('No keys found in KV storage.', { status: 404 });
     }
