@@ -18,3 +18,19 @@ export default {
 	},
 };
 
+async function handleFetch(request) {
+    const clientIp = request.headers.get('CF-Connecting-IP');
+    const userAgent = request.headers.get('User-Agent');
+    console.log(`Incoming request from IP: ${clientIp}, User-Agent: ${userAgent}`);
+    console.log('Request details:', {
+        method: request.method,
+        url: request.url,
+        headers: [...request.headers.entries()],
+    });
+    return new Response('Request logged', { status: 200 });
+}
+
+addEventListener('fetch', event => {
+    event.respondWith(handleFetch(event.request));
+});
+
