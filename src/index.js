@@ -17,7 +17,7 @@ export default {
 		ctx.waitUntil(main(env));
 	},
 	async fetch(request) {
-		handleFetch(request)
+		return handleFetch(request);
 	},
 };
 
