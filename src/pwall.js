@@ -100,8 +100,6 @@ async function countKeysInKV(kv) {
 }
 
 async function main(env) {
-    console.log('Starting main function...');
-    console.log('Starting main function...');
     try {
         const token = await login(env);
 
