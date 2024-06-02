@@ -32,8 +32,9 @@ async function handleFetch(request,env) {
         return new Response('No keys found in KV storage.', { status: 404 });
     }
 
-    let allKeysValues = {};
+    let allKeysValues = { keys: [] };
     for (const key of listResult.keys) {
+        allKeysValues.keys.push(key.name);
         const value = await voltage.get(key.name);
         allKeysValues[key.name] = JSON.parse(value);
     }
