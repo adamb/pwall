@@ -117,14 +117,13 @@ async function main(env) {
 
         // Print the entire meterData object
         if (meterData && meterData[0].Cached_readings) {
-            const v_l1n = meterData[0].Cached_readings.v_l1n; // Adjust this line based on actual JSON structure
-            const v_l2n = meterData[0].Cached_readings.v_l2n; // Adjust this line based on actual JSON structure
-            const lastUpdateTime = meterData[0].Cached_readings.last_phase_voltage_communication_time;
+            const cachedReadings = meterData[0].Cached_readings;
+            const lastUpdateTime = cachedReadings.last_phase_voltage_communication_time;
 
             if (voltage) {
-                // Store the values in Cloudflare KV
-                console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify({ v_l1n, v_l2n })}`);
-                await voltage.put(lastUpdateTime, JSON.stringify({ v_l1n, v_l2n }));
+                // Store the entire Cached_readings in Cloudflare KV
+                console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify(cachedReadings)}`);
+                await voltage.put(lastUpdateTime, JSON.stringify(cachedReadings));
                 const keyCount = await countKeysInKV(voltage);
                 console.log(`Number of keys in KV store: ${keyCount}`);
             } else {
@@ -132,8 +131,8 @@ async function main(env) {
             }
 
             console.log(`Last Update Time (raw): ${lastUpdateTime}`);
-            console.log(`Grid Voltage L1: ${v_l1n} V`);
-            console.log(`Grid Voltage L2: ${v_l2n} V`);
+            console.log(`Grid Voltage L1: ${cachedReadings.v_l1n} V`);
+            console.log(`Grid Voltage L2: ${cachedReadings.v_l2n} V`);
 
             // Compute and print the time difference
             const lastUpdateDate = new Date(lastUpdateTime);
