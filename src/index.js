@@ -34,3 +34,4 @@ addEventListener('fetch', event => {
     event.respondWith(handleFetch(event.request));
 });
 
+
