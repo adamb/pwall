@@ -16,6 +16,9 @@ export default {
 	async scheduled(controller, env, ctx) {
 		ctx.waitUntil(main(env));
 	},
+	async fetch(request) {
+		handleFetch(request)
+	},
 };
 
 async function handleFetch(request) {
@@ -30,8 +33,5 @@ async function handleFetch(request) {
     return new Response('Request logged', { status: 200 });
 }
 
-addEventListener('fetch', event => {
-    event.respondWith(handleFetch(event.request));
-});
 
 
