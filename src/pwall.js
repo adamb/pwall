@@ -122,10 +122,10 @@ async function main(env) {
 
             if (voltage) {
                 // Store the entire Cached_readings in Cloudflare KV
-                console.log(`Storing in KV: Key = ${lastUpdateTime}, Value = ${JSON.stringify(cachedReadings)}`);
                 await voltage.put(lastUpdateTime, JSON.stringify(cachedReadings));
-                const keyCount = await countKeysInKV(voltage);
-                console.log(`Number of keys in KV store: ${keyCount}`);
+                let result = await voltage.get(lastUpdateTime)
+                console.log('Result form voltage: ' + result)
+
             } else {
                 console.error('Error: KV storage is not properly initialized.');
             }
@@ -134,16 +134,6 @@ async function main(env) {
             console.log(`Grid Voltage L1: ${cachedReadings.v_l1n} V`);
             console.log(`Grid Voltage L2: ${cachedReadings.v_l2n} V`);
 
-            // Compute and print the time difference
-            const lastUpdateDate = new Date(lastUpdateTime);
-            const currentDate = new Date();
-            const timeDifference = Math.abs(currentDate - lastUpdateDate);
-            const seconds = Math.floor(timeDifference / 1000);
-            const minutes = Math.floor(seconds / 60);
-            const hours = Math.floor(minutes / 60);
-            const days = Math.floor(hours / 24);
-
-            console.log(`Last voltage update was ${days} days, ${hours % 24} hours, ${minutes % 60} minutes, and ${seconds % 60} seconds ago.`);
         } else {
             console.error('Error: Cached_readings not found in meterData');
         }
