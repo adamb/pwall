@@ -75,7 +75,10 @@ async function handleFetch(request,env) {
         allKeysValues.keys.push(key.name);
         const value = await voltage.get(key.name);
         const parsedValue = JSON.parse(value);
-        allKeysValues[key.name] = parsedValue;
+        allKeysValues[key.name] = {
+            v_l1n: parsedValue.v_l1n,
+            v_l2n: parsedValue.v_l2n
+        };
         console.log(`v_l1n: ${parsedValue.v_l1n} V`);
     }
 
