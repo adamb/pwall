@@ -64,14 +64,24 @@ async function handleFetch(request,env) {
 
     const currentDate = getUTCToPuertoRicoISODate();
     const currentHourPrefix = currentDate.slice(0, 13); // Get the current date and hour in ISO format
-    console.log(`current hour prefix:  ${currentHourPrefix} ${currentDate}`)
-	const listResult = await voltage.list({ prefix: currentHourPrefix });
-    if (!listResult || !listResult.keys || listResult.keys.length === 0) {
+    const previousHourDate = new Date(new Date().getTime() - 60 * 60 * 1000);
+    const previousHourPrefix = previousHourDate.toISOString().slice(0, 13);
+
+    console.log(`current hour prefix: ${currentHourPrefix} ${currentDate}`);
+    console.log(`previous hour prefix: ${previousHourPrefix} ${previousHourDate.toISOString()}`);
+
+    const currentHourKeys = await voltage.list({ prefix: currentHourPrefix });
+    const previousHourKeys = await voltage.list({ prefix: previousHourPrefix });
+
+    if ((!currentHourKeys || !currentHourKeys.keys || currentHourKeys.keys.length === 0) &&
+        (!previousHourKeys || !previousHourKeys.keys || previousHourKeys.keys.length === 0)) {
         return new Response('No keys found in KV storage.', { status: 404 });
     }
 
-    let allKeysValues = { };
-    for (const key of listResult.keys) {
+    let allKeysValues = {};
+    const allKeys = [...(previousHourKeys.keys || []), ...(currentHourKeys.keys || [])];
+
+    for (const key of allKeys) {
         const value = await voltage.get(key.name);
         const parsedValue = JSON.parse(value);
         allKeysValues[key.name] = {
