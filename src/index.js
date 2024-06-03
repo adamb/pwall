@@ -81,8 +81,67 @@ async function handleFetch(request,env) {
         console.log(`v_l1n: ${parsedValue.v_l1n} V`);
     }
 
-    const prettyPrintedValues = JSON.stringify(allKeysValues, null, 2);
-    return new Response(prettyPrintedValues, { status: 200, headers: { 'Content-Type': 'application/json' } });
+    const htmlTemplate = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Voltage Chart</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <canvas id="voltageChart" width="400" height="200"></canvas>
+        <script>
+            const ctx = document.getElementById('voltageChart').getContext('2d');
+            const voltageData = ${JSON.stringify(allKeysValues)};
+            const labels = Object.keys(voltageData);
+            const v_l1nData = labels.map(key => voltageData[key].v_l1n);
+            const v_l2nData = labels.map(key => voltageData[key].v_l2n);
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Voltage L1-N',
+                            data: v_l1nData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'Voltage L2-N',
+                            data: v_l2nData,
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Voltage (V)'
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+    </html>
+    `;
+    return new Response(htmlTemplate, { status: 200, headers: { 'Content-Type': 'text/html' } });
 }
 
 
