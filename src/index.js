@@ -95,10 +95,10 @@ async function handleFetch(request,env) {
         <script>
             const ctx = document.getElementById('voltageChart').getContext('2d');
             const voltageData = ${JSON.stringify(allKeysValues)};
-            //const labels = Object.keys(voltageData);
-			const labels = Object.keys(voltageData).map(key => key.slice(11, 16)); // Extract hour and minutes
-            const v_l1nData = labels.map(key => voltageData[key].v_l1n);
-            const v_l2nData = labels.map(key => voltageData[key].v_l2n);
+            const keys = Object.keys(voltageData);
+            const labels = keys.map(key => key.slice(11, 16)); // Extract hour and minutes
+            const v_l1nData = keys.map(key => voltageData[key].v_l1n);
+            const v_l2nData = keys.map(key => voltageData[key].v_l2n);
 			
 
             new Chart(ctx, {
