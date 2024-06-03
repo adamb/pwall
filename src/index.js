@@ -38,11 +38,11 @@ function getFormattedDate() {
 	const hours = pad(date.getHours(), 2);
 	const minutes = pad(date.getMinutes(), 2);
 	
-	const timezoneOffset = -date.getTimezoneOffset();
-	const absOffset = Math.abs(timezoneOffset);
+	const puertoRicoOffset = -4 * 60; // Puerto Rico is UTC-4
+	const absOffset = Math.abs(puertoRicoOffset);
 	const offsetHours = pad(Math.floor(absOffset / 60), 2);
 	const offsetMinutes = pad(absOffset % 60, 2);
-	const offsetSign = timezoneOffset >= 0 ? '+' : '-';
+	const offsetSign = puertoRicoOffset >= 0 ? '+' : '-';
 	
 	return `${year}-${month}-${day}T${hours}:${minutes}${offsetSign}${offsetHours}:${offsetMinutes}`;
   }
