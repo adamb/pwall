@@ -21,8 +21,7 @@ export default {
 	},
 };
 
-function getUTCToPuertoRicoISODate() {
-const date = new Date();
+function getUTCToPuertoRicoISODate(date) {
 
 // Get the UTC time
 const year = date.getUTCFullYear();
@@ -56,16 +55,19 @@ const seconds = String(date.getUTCSeconds()).padStart(2, '0');
 }
 
 
-async function handleFetch(request,env) {
+async function handleFetch(request, env) {
     const voltage = env.voltage;
     if (!voltage) {
         return new Response('KV storage is not properly initialized.', { status: 500 });
     }
 
-    const currentDate = getUTCToPuertoRicoISODate();
-    const currentHourPrefix = currentDate.slice(0, 13); // Get the current date and hour in ISO format
-    const previousHourDate = new Date(new Date().getTime() - 60 * 60 * 1000);
-    const previousHourPrefix = previousHourDate.toISOString().slice(0, 13);
+    const currentDate = new Date();
+    const currentDateISO = getUTCToPuertoRicoISODate(currentDate);
+    const currentHourPrefix = currentDateISO.slice(0, 13); // Get the current date and hour in ISO format
+
+    const previousHourDate = new Date(currentDate.getTime() - 60 * 60 * 1000);
+    const previousHourISO = getUTCToPuertoRicoISODate(previousHourDate);
+    const previousHourPrefix = previousHourISO.slice(0, 13);
 
     console.log(`current hour prefix: ${currentHourPrefix} ${currentDate}`);
     console.log(`previous hour prefix: ${previousHourPrefix} ${previousHourDate.toISOString()}`);
