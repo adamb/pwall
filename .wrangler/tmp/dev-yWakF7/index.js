@@ -14703,34 +14703,35 @@ var src_default = {
     return handleFetch(request, env);
   }
 };
-function getFormattedDate() {
+function getUTCToPuertoRicoISODate() {
   const date = /* @__PURE__ */ new Date();
-  const pad = (number, length) => {
-    let str = String(number);
-    while (str.length < length) {
-      str = "0" + str;
-    }
-    return str;
-  };
-  const year = date.getFullYear();
-  const month = pad(date.getMonth() + 1, 2);
-  const day = pad(date.getDate(), 2);
-  const hours = pad(date.getHours(), 2);
-  const minutes = pad(date.getMinutes(), 2);
-  const timezoneOffset = -date.getTimezoneOffset();
-  const absOffset = Math.abs(timezoneOffset);
-  const offsetHours = pad(Math.floor(absOffset / 60), 2);
-  const offsetMinutes = pad(absOffset % 60, 2);
-  const offsetSign = timezoneOffset >= 0 ? "+" : "-";
-  return `${year}-${month}-${day}T${hours}:${minutes}${offsetSign}${offsetHours}:${offsetMinutes}`;
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const hours = String(date.getUTCHours()).padStart(2, "0");
+  const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+  const seconds = String(date.getUTCSeconds()).padStart(2, "0");
+  const milliseconds = String(date.getUTCMilliseconds()).padStart(3, "0");
+  const puertoRicoOffset = -4;
+  const puertoRicoOffsetInMs = puertoRicoOffset * 60 * 60 * 1e3;
+  const puertoRicoTime = new Date(date.getTime() + puertoRicoOffsetInMs);
+  const prYear = puertoRicoTime.getUTCFullYear();
+  const prMonth = String(puertoRicoTime.getUTCMonth() + 1).padStart(2, "0");
+  const prDay = String(puertoRicoTime.getUTCDate()).padStart(2, "0");
+  const prHours = String(puertoRicoTime.getUTCHours()).padStart(2, "0");
+  const prMinutes = String(puertoRicoTime.getUTCMinutes()).padStart(2, "0");
+  const prSeconds = String(puertoRicoTime.getUTCSeconds()).padStart(2, "0");
+  const prMilliseconds = String(puertoRicoTime.getUTCMilliseconds()).padStart(3, "0");
+  const isoDate = `${prYear}-${prMonth}-${prDay}T${prHours}:${prMinutes}:${prSeconds}.${prMilliseconds}-04:00`;
+  return isoDate;
 }
 async function handleFetch(request, env) {
   const voltage = env.voltage;
   if (!voltage) {
     return new Response("KV storage is not properly initialized.", { status: 500 });
   }
-  const currentDate = getFormattedDate();
-  const currentHourPrefix = currentDate.slice(0, 15);
+  const currentDate = getUTCToPuertoRicoISODate();
+  const currentHourPrefix = currentDate.slice(0, 13);
   console.log(`current hour prefix:  ${currentHourPrefix} ${currentDate}`);
   const listResult = await voltage.list({ prefix: currentHourPrefix });
   if (!listResult || !listResult.keys || listResult.keys.length === 0) {
