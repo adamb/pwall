@@ -74,7 +74,9 @@ async function handleFetch(request,env) {
     for (const key of listResult.keys) {
         allKeysValues.keys.push(key.name);
         const value = await voltage.get(key.name);
-        allKeysValues[key.name] = JSON.parse(value);
+        const parsedValue = JSON.parse(value);
+        allKeysValues[key.name] = parsedValue;
+        console.log(`v_l1n: ${parsedValue.v_l1n} V`);
     }
 
     const prettyPrintedValues = JSON.stringify(allKeysValues, null, 2);
