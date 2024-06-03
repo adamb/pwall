@@ -3,15 +3,12 @@
 // export dynamically through wrangler, or we can potentially let users directly
 // add them as a sort of "plugin" system.
 
-import ENTRY from "/Users/adam/code/pwall/.wrangler/tmp/bundle-YwK3hz/middleware-insertion-facade.js";
+import ENTRY, { __INTERNAL_WRANGLER_MIDDLEWARE__ } from "/Users/adam/code/pwall/.wrangler/tmp/bundle-ST2bjB/middleware-insertion-facade.js";
 import { __facade_invoke__, __facade_register__, Dispatcher } from "/Users/adam/.nodenv/versions/18.17.1/lib/node_modules/wrangler/templates/middleware/common.ts";
-import type {
-	WithMiddleware,
-	WorkerEntrypointConstructor,
-} from "/Users/adam/code/pwall/.wrangler/tmp/bundle-YwK3hz/middleware-insertion-facade.js";
+import type { WorkerEntrypointConstructor } from "/Users/adam/code/pwall/.wrangler/tmp/bundle-ST2bjB/middleware-insertion-facade.js";
 
 // Preserve all the exports from the worker
-export * from "/Users/adam/code/pwall/.wrangler/tmp/bundle-YwK3hz/middleware-insertion-facade.js";
+export * from "/Users/adam/code/pwall/.wrangler/tmp/bundle-ST2bjB/middleware-insertion-facade.js";
 
 class __Facade_ScheduledController__ implements ScheduledController {
 	readonly #noRetry: ScheduledController["noRetry"];
@@ -33,15 +30,16 @@ class __Facade_ScheduledController__ implements ScheduledController {
 	}
 }
 
-function wrapExportedHandler(
-	worker: WithMiddleware<ExportedHandler>
-): ExportedHandler {
+function wrapExportedHandler(worker: ExportedHandler): ExportedHandler {
 	// If we don't have any middleware defined, just return the handler as is
-	if (worker.middleware === undefined || worker.middleware.length === 0) {
+	if (
+		__INTERNAL_WRANGLER_MIDDLEWARE__ === undefined ||
+		__INTERNAL_WRANGLER_MIDDLEWARE__.length === 0
+	) {
 		return worker;
 	}
 	// Otherwise, register all middleware once
-	for (const middleware of worker.middleware) {
+	for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
 		__facade_register__(middleware);
 	}
 
@@ -75,14 +73,17 @@ function wrapExportedHandler(
 }
 
 function wrapWorkerEntrypoint(
-	klass: WithMiddleware<WorkerEntrypointConstructor>
+	klass: WorkerEntrypointConstructor
 ): WorkerEntrypointConstructor {
 	// If we don't have any middleware defined, just return the handler as is
-	if (klass.middleware === undefined || klass.middleware.length === 0) {
+	if (
+		__INTERNAL_WRANGLER_MIDDLEWARE__ === undefined ||
+		__INTERNAL_WRANGLER_MIDDLEWARE__.length === 0
+	) {
 		return klass;
 	}
 	// Otherwise, register all middleware once
-	for (const middleware of klass.middleware) {
+	for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
 		__facade_register__(middleware);
 	}
 

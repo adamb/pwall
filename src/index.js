@@ -21,15 +21,43 @@ export default {
 	},
 };
 
+function getFormattedDate() {
+	const date = new Date();
+	
+	const pad = (number, length) => {
+	  let str = String(number);
+	  while (str.length < length) {
+		str = '0' + str;
+	  }
+	  return str;
+	};
+	
+	const year = date.getFullYear();
+	const month = pad(date.getMonth() + 1, 2);
+	const day = pad(date.getDate(), 2);
+	const hours = pad(date.getHours(), 2);
+	const minutes = pad(date.getMinutes(), 2);
+	
+	const timezoneOffset = -date.getTimezoneOffset();
+	const absOffset = Math.abs(timezoneOffset);
+	const offsetHours = pad(Math.floor(absOffset / 60), 2);
+	const offsetMinutes = pad(absOffset % 60, 2);
+	const offsetSign = timezoneOffset >= 0 ? '+' : '-';
+	
+	return `${year}-${month}-${day}T${hours}:${minutes}${offsetSign}${offsetHours}:${offsetMinutes}`;
+  }
+
+
 async function handleFetch(request,env) {
     const voltage = env.voltage;
     if (!voltage) {
         return new Response('KV storage is not properly initialized.', { status: 500 });
     }
 
-    const currentDate = new Date();
-    const currentHourPrefix = currentDate.toISOString().slice(0, 13); // Get the current date and hour in ISO format
-    const listResult = await voltage.list({ prefix: currentHourPrefix });
+    const currentDate = getFormattedDate();
+    const currentHourPrefix = currentDate.slice(0, 15); // Get the current date and hour in ISO format
+    console.log(`current hour prefix:  ${currentHourPrefix} ${currentDate}`)
+	const listResult = await voltage.list({ prefix: currentHourPrefix });
     if (!listResult || !listResult.keys || listResult.keys.length === 0) {
         return new Response('No keys found in KV storage.', { status: 404 });
     }

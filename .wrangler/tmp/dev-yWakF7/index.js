@@ -27,7 +27,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// .wrangler/tmp/bundle-YwK3hz/checked-fetch.js
+// .wrangler/tmp/bundle-ST2bjB/checked-fetch.js
 function checkURL(request, init) {
   const url = request instanceof URL ? request : new URL(
     (typeof request === "string" ? new Request(request, init) : request).url
@@ -45,7 +45,7 @@ function checkURL(request, init) {
 }
 var urls;
 var init_checked_fetch = __esm({
-  ".wrangler/tmp/bundle-YwK3hz/checked-fetch.js"() {
+  ".wrangler/tmp/bundle-ST2bjB/checked-fetch.js"() {
     urls = /* @__PURE__ */ new Set();
     globalThis.fetch = new Proxy(globalThis.fetch, {
       apply(target, thisArg, argArray) {
@@ -14683,11 +14683,11 @@ var require_pwall = __commonJS({
   }
 });
 
-// .wrangler/tmp/bundle-YwK3hz/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-ST2bjB/middleware-loader.entry.ts
 init_checked_fetch();
 init_modules_watch_stub();
 
-// .wrangler/tmp/bundle-YwK3hz/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-ST2bjB/middleware-insertion-facade.js
 init_checked_fetch();
 init_modules_watch_stub();
 
@@ -14703,22 +14703,47 @@ var src_default = {
     return handleFetch(request, env);
   }
 };
+function getFormattedDate() {
+  const date = /* @__PURE__ */ new Date();
+  const pad = (number, length) => {
+    let str = String(number);
+    while (str.length < length) {
+      str = "0" + str;
+    }
+    return str;
+  };
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1, 2);
+  const day = pad(date.getDate(), 2);
+  const hours = pad(date.getHours(), 2);
+  const minutes = pad(date.getMinutes(), 2);
+  const timezoneOffset = -date.getTimezoneOffset();
+  const absOffset = Math.abs(timezoneOffset);
+  const offsetHours = pad(Math.floor(absOffset / 60), 2);
+  const offsetMinutes = pad(absOffset % 60, 2);
+  const offsetSign = timezoneOffset >= 0 ? "+" : "-";
+  return `${year}-${month}-${day}T${hours}:${minutes}${offsetSign}${offsetHours}:${offsetMinutes}`;
+}
 async function handleFetch(request, env) {
   const voltage = env.voltage;
   if (!voltage) {
     return new Response("KV storage is not properly initialized.", { status: 500 });
   }
-  const listResult = await voltage.list();
+  const currentDate = getFormattedDate();
+  const currentHourPrefix = currentDate.slice(0, 15);
+  console.log(`current hour prefix:  ${currentHourPrefix} ${currentDate}`);
+  const listResult = await voltage.list({ prefix: currentHourPrefix });
   if (!listResult || !listResult.keys || listResult.keys.length === 0) {
     return new Response("No keys found in KV storage.", { status: 404 });
   }
-  const mostRecentKey = listResult.keys.sort((a, b) => a.name.localeCompare(b.name)).pop().name;
-  const mostRecentValue = await voltage.get(mostRecentKey);
-  if (!mostRecentValue) {
-    return new Response("No value found for the most recent key.", { status: 404 });
+  let allKeysValues = { keys: [] };
+  for (const key of listResult.keys) {
+    allKeysValues.keys.push(key.name);
+    const value = await voltage.get(key.name);
+    allKeysValues[key.name] = JSON.parse(value);
   }
-  const prettyPrintedValue = JSON.stringify(JSON.parse(mostRecentValue), null, 2);
-  return new Response(prettyPrintedValue, { status: 200, headers: { "Content-Type": "application/json" } });
+  const prettyPrintedValues = JSON.stringify(allKeysValues, null, 2);
+  return new Response(prettyPrintedValues, { status: 200, headers: { "Content-Type": "application/json" } });
 }
 
 // ../../.nodenv/versions/18.17.1/lib/node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
@@ -14779,13 +14804,13 @@ var jsonError = async (request, env, _ctx, middlewareCtx) => {
 };
 var middleware_miniflare3_json_error_default = jsonError;
 
-// .wrangler/tmp/bundle-YwK3hz/middleware-insertion-facade.js
-src_default.middleware = [
+// .wrangler/tmp/bundle-ST2bjB/middleware-insertion-facade.js
+var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
+  ...void 0 ?? [],
   middleware_ensure_req_body_drained_default,
   middleware_scheduled_default,
-  middleware_miniflare3_json_error_default,
-  ...src_default.middleware ?? []
-].filter(Boolean);
+  middleware_miniflare3_json_error_default
+];
 var middleware_insertion_facade_default = src_default;
 
 // ../../.nodenv/versions/18.17.1/lib/node_modules/wrangler/templates/middleware/common.ts
@@ -14812,7 +14837,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
   ]);
 }
 
-// .wrangler/tmp/bundle-YwK3hz/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-ST2bjB/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -14828,10 +14853,10 @@ var __Facade_ScheduledController__ = class {
   }
 };
 function wrapExportedHandler(worker) {
-  if (worker.middleware === void 0 || worker.middleware.length === 0) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0) {
     return worker;
   }
-  for (const middleware of worker.middleware) {
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
     __facade_register__(middleware);
   }
   const fetchDispatcher = function(request, env, ctx) {
@@ -14859,10 +14884,10 @@ function wrapExportedHandler(worker) {
   };
 }
 function wrapWorkerEntrypoint(klass) {
-  if (klass.middleware === void 0 || klass.middleware.length === 0) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0) {
     return klass;
   }
-  for (const middleware of klass.middleware) {
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
     __facade_register__(middleware);
   }
   return class extends klass {
@@ -14904,6 +14929,7 @@ if (typeof middleware_insertion_facade_default === "object") {
 }
 var middleware_loader_entry_default = WRAPPED_ENTRY;
 export {
+  __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default as default
 };
 /*! Bundled license information:
