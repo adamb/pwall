@@ -81,7 +81,15 @@ async function handleFetch(request, env) {
     }
 
     let allKeysValues = {};
-    const allKeys = [...(previousHourKeys.keys || []), ...(currentHourKeys.keys || [])];
+    const oneHourAgo = new Date(currentDate.getTime() - 60 * 60 * 1000);
+    const oneHourAgoISO = getUTCToPuertoRicoISODate(oneHourAgo);
+
+    const filteredPreviousHourKeys = (previousHourKeys.keys || []).filter(key => {
+        const keyDate = new Date(key.name);
+        return keyDate >= oneHourAgo;
+    });
+
+    const allKeys = [...filteredPreviousHourKeys, ...(currentHourKeys.keys || [])];
 
     for (const key of allKeys) {
         const value = await voltage.get(key.name);
