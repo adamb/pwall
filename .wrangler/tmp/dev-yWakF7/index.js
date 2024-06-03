@@ -14737,11 +14737,15 @@ async function handleFetch(request, env) {
   if (!listResult || !listResult.keys || listResult.keys.length === 0) {
     return new Response("No keys found in KV storage.", { status: 404 });
   }
-  let allKeysValues = { keys: [] };
+  let allKeysValues = {};
   for (const key of listResult.keys) {
-    allKeysValues.keys.push(key.name);
     const value = await voltage.get(key.name);
-    allKeysValues[key.name] = JSON.parse(value);
+    const parsedValue = JSON.parse(value);
+    allKeysValues[key.name] = {
+      v_l1n: parsedValue.v_l1n,
+      v_l2n: parsedValue.v_l2n
+    };
+    console.log(`v_l1n: ${parsedValue.v_l1n} V`);
   }
   const prettyPrintedValues = JSON.stringify(allKeysValues, null, 2);
   return new Response(prettyPrintedValues, { status: 200, headers: { "Content-Type": "application/json" } });
