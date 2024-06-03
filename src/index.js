@@ -121,6 +121,10 @@ async function handleFetch(request, env) {
             const v_l2nData = keys.map(key => voltageData[key].v_l2n);
 			
 
+            const average = (arr) => arr.reduce((a, b) => a + b, 0) / arr.length;
+            const v_l1nAverage = average(v_l1nData);
+            const v_l2nAverage = average(v_l2nData);
+
             new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -139,7 +143,22 @@ async function handleFetch(request, env) {
                             borderColor: 'rgba(153, 102, 255, 1)',
                             borderWidth: 1,
                             fill: false
-                        }
+                        },
+                        {
+                            label: 'Average Voltage L1-N',
+                            data: Array(labels.length).fill(v_l1nAverage),
+                            borderColor: 'rgba(75, 192, 192, 0.5)',
+                            borderWidth: 1,
+                            borderDash: [5, 5],
+                            fill: false
+                        },
+                        {
+                            label: 'Average Voltage L2-N',
+                            data: Array(labels.length).fill(v_l2nAverage),
+                            borderColor: 'rgba(153, 102, 255, 0.5)',
+                            borderWidth: 1,
+                            borderDash: [5, 5],
+                            fill: false
                     ]
                 },
                 options: {
