@@ -118,7 +118,7 @@ async function handleFetch(request, env) {
             const ctx = document.getElementById('voltageChart').getContext('2d');
             const voltageData = ${JSON.stringify(allKeysValues)};
             const keys = Object.keys(voltageData);
-            const labels = keys.map(key => key.slice(11, 16)); // Extract hour and minutes
+            const labels = keys.map(key => key); // Use the entire key
             const v_l1nData = keys.map(key => voltageData[key].v_l1n);
             const v_l2nData = keys.map(key => voltageData[key].v_l2n);
 			
