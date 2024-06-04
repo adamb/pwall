@@ -63,33 +63,33 @@ async function handleFetch(request, env) {
 
     const currentDate = new Date();
     const currentDateISO = getUTCToPuertoRicoISODate(currentDate);
-    const currentHourPrefix = currentDateISO.slice(0, 13); // Get the current date and hour in ISO format
+    const currentDayPrefix = currentDateISO.slice(0, 10); // Get the current date in ISO format
 
-    const previousHourDate = new Date(currentDate.getTime() - 60 * 60 * 1000);
-    const previousHourISO = getUTCToPuertoRicoISODate(previousHourDate);
-    const previousHourPrefix = previousHourISO.slice(0, 13);
+    const previousDayDate = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
+    const previousDayISO = getUTCToPuertoRicoISODate(previousDayDate);
+    const previousDayPrefix = previousDayISO.slice(0, 10);
 
-    console.log(`current hour prefix: ${currentHourPrefix} ${currentDate}`);
-    console.log(`previous hour prefix: ${previousHourPrefix} ${previousHourDate.toISOString()}`);
+    console.log(`current day prefix: ${currentDayPrefix} ${currentDate}`);
+    console.log(`previous day prefix: ${previousDayPrefix} ${previousDayDate.toISOString()}`);
 
-    const currentHourKeys = await voltage.list({ prefix: currentHourPrefix });
-    const previousHourKeys = await voltage.list({ prefix: previousHourPrefix });
+    const currentDayKeys = await voltage.list({ prefix: currentDayPrefix });
+    const previousDayKeys = await voltage.list({ prefix: previousDayPrefix });
 
-    if ((!currentHourKeys || !currentHourKeys.keys || currentHourKeys.keys.length === 0) &&
-        (!previousHourKeys || !previousHourKeys.keys || previousHourKeys.keys.length === 0)) {
+    if ((!currentDayKeys || !currentDayKeys.keys || currentDayKeys.keys.length === 0) &&
+        (!previousDayKeys || !previousDayKeys.keys || previousDayKeys.keys.length === 0)) {
         return new Response('No keys found in KV storage.', { status: 404 });
     }
 
     let allKeysValues = {};
-    const oneHourAgo = new Date(currentDate.getTime() - 60 * 60 * 1000);
-    const oneHourAgoISO = getUTCToPuertoRicoISODate(oneHourAgo);
+    const oneDayAgo = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
+    const oneDayAgoISO = getUTCToPuertoRicoISODate(oneDayAgo);
 
-    const filteredPreviousHourKeys = (previousHourKeys.keys || []).filter(key => {
+    const filteredPreviousDayKeys = (previousDayKeys.keys || []).filter(key => {
         const keyDate = new Date(key.name);
-        return keyDate >= oneHourAgo;
+        return keyDate >= oneDayAgo;
     });
 
-    const allKeys = [...filteredPreviousHourKeys, ...(currentHourKeys.keys || [])];
+    const allKeys = [...filteredPreviousDayKeys, ...(currentDayKeys.keys || [])];
 
     for (const key of allKeys) {
         const value = await voltage.get(key.name);
