@@ -56,7 +56,9 @@ function getUTCToPuertoRicoISODate(date) {
 
 
 async function handleFetch(request, env) {
+    console.time('handleFetch total time');
     const voltage = env.voltage;
+    console.time('Fetch current and previous day keys');
     if (!voltage) {
         return new Response('KV storage is not properly initialized.', { status: 500 });
     }
@@ -74,6 +76,8 @@ async function handleFetch(request, env) {
 
     const currentDayKeys = await voltage.list({ prefix: currentDayPrefix });
     const previousDayKeys = await voltage.list({ prefix: previousDayPrefix });
+
+    console.timeEnd('Fetch current and previous day keys');
 
     if ((!currentDayKeys || !currentDayKeys.keys || currentDayKeys.keys.length === 0) &&
         (!previousDayKeys || !previousDayKeys.keys || previousDayKeys.keys.length === 0)) {
@@ -93,6 +97,7 @@ async function handleFetch(request, env) {
 
     console.log(`Total keys to process: ${allKeys.length}`);
 
+    console.time('Process all keys');
     for (const key of allKeys) {
         const value = await voltage.get(key.name);
         const parsedValue = JSON.parse(value);
@@ -103,6 +108,9 @@ async function handleFetch(request, env) {
         console.log(`v_l1n: ${parsedValue.v_l1n} V`);
     }
 
+    console.timeEnd('Process all keys');
+
+    console.time('Generate HTML template');
     const htmlTemplate = `
     <!DOCTYPE html>
     <html lang="en">
@@ -184,6 +192,8 @@ async function handleFetch(request, env) {
     </body>
     </html>
     `;
+    console.timeEnd('Generate HTML template');
+    console.timeEnd('handleFetch total time');
     return new Response(htmlTemplate, { status: 200, headers: { 'Content-Type': 'text/html' } });
 }
 
