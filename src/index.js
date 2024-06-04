@@ -161,7 +161,7 @@ async function handleFetch(request, env) {
                             borderWidth: 1,
                             borderDash: [5, 5],
                             fill: false
-                    ]
+                    }]
                 },
                 options: {
                     scales: {
