@@ -91,6 +91,8 @@ async function handleFetch(request, env) {
 
     const allKeys = [...filteredPreviousDayKeys, ...(currentDayKeys.keys || [])];
 
+    console.log(`Total keys to process: ${allKeys.length}`);
+
     for (const key of allKeys) {
         const value = await voltage.get(key.name);
         const parsedValue = JSON.parse(value);
