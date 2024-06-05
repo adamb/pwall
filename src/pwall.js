@@ -77,28 +77,6 @@ async function getMeterAggregates(token, env) {
     return data;
 }
 
-async function countKeysInKV(kv) {
-    if (kv && typeof kv.list === 'function') {
-        const keys = await kv.list({ prefix: '2024-06-01T07' });
-        console.log('Type of keys:', typeof keys);
-        console.log('Keys content:', keys);
-        if (Array.isArray(keys)) {
-            console.log('Keys and values in KV store:');
-            for (const key of keys) {
-                const value = await kv.get(key);
-                console.log(`Key: ${key}, Value: ${value}`);
-            }
-            return keys.length;
-        } else {
-            console.error('Error: KV list method did not return an array.');
-            return 0;
-        }
-    } else {
-        console.error('Error: KV storage is not properly initialized or does not support listing keys.');
-        return 0;
-    }
-}
-
 async function main(env) {
     try {
         const token = await login(env);
@@ -106,14 +84,7 @@ async function main(env) {
         const voltage = env.voltage;
 
 
-        console.log('Calling getMeterAggregates...');
         const meterData = await getMeterAggregates(token, env);
-        if (meterData) {
-            console.log('Received Meter Data');
-            // console.log('Received Meter Data:', JSON.stringify(meterData, null, 2));
-        } else {
-            console.log('No Meter Data received.');
-        }
 
         // Print the entire meterData object
         if (meterData && meterData[0].Cached_readings) {
@@ -124,8 +95,6 @@ async function main(env) {
                 // Store the entire Cached_readings in Cloudflare KV
                 await voltage.put(lastUpdateTime, JSON.stringify(cachedReadings));
                 let result = await voltage.get(lastUpdateTime)
-                console.log('Result from voltage:', JSON.stringify(JSON.parse(result), null, 2));
-
             } else {
                 console.error('Error: KV storage is not properly initialized.');
             }

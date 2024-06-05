@@ -105,7 +105,6 @@ async function handleFetch(request, env) {
             v_l1n: parsedValue.v_l1n,
             v_l2n: parsedValue.v_l2n
         };
-        console.log(`v_l1n: ${parsedValue.v_l1n} V`);
     }
 
     console.timeEnd('Process all keys');
