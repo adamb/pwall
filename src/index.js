@@ -101,10 +101,14 @@ async function handleFetch(request, env) {
     for (const key of allKeys) {
         const value = await voltage.get(key.name);
         const parsedValue = JSON.parse(value);
-        allKeysValues[key.name] = {
-            v_l1n: parsedValue.v_l1n,
-            v_l2n: parsedValue.v_l2n
-        };
+        if (parsedValue) {
+            allKeysValues[key.name] = {
+                v_l1n: parsedValue.v_l1n,
+                v_l2n: parsedValue.v_l2n
+            };
+        } else {
+            console.warn(`Parsed value for key ${key.name} is null`);
+        }
     }
 
     console.timeEnd('Process all keys');
