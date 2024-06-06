@@ -56,11 +56,10 @@ function getUTCToPuertoRicoISODate(date) {
 
 
 async function handleFetch(request, env) {
-    console.time('handleFetch total time');
-    console.time('handleFetch total time');
+    const handleFetchStartTime = Date.now();
     console.log('handleFetch started');
     const voltage = env.voltage;
-    console.time('Fetch current and previous day keys');
+    const fetchKeysStartTime = Date.now();
     console.log('Fetch current and previous day keys started');
     console.time('Fetch current and previous day keys');
     if (!voltage) {
@@ -81,7 +80,8 @@ async function handleFetch(request, env) {
     const currentDayKeys = await voltage.list({ prefix: currentDayPrefix });
     const previousDayKeys = await voltage.list({ prefix: previousDayPrefix });
 
-    console.timeEnd('Fetch current and previous day keys');
+    const fetchKeysEndTime = Date.now();
+    console.log(`Fetch current and previous day keys took ${fetchKeysEndTime - fetchKeysStartTime} ms`);
 
     console.timeEnd('Fetch current and previous day keys');
     console.log('Fetch current and previous day keys ended');
@@ -103,7 +103,7 @@ async function handleFetch(request, env) {
 
     console.log(`Total keys to process: ${allKeys.length}`);
 
-    console.time('Process all keys');
+    const processKeysStartTime = Date.now();
     console.time('Process all keys');
     console.log('Process all keys started');
     for (const key of allKeys) {
@@ -119,9 +119,10 @@ async function handleFetch(request, env) {
         }
     }
 
-    console.timeEnd('Process all keys');
+    const processKeysEndTime = Date.now();
+    console.log(`Process all keys took ${processKeysEndTime - processKeysStartTime} ms`);
 
-    console.time('Generate HTML template');
+    const generateHTMLStartTime = Date.now();
     console.timeEnd('Process all keys');
     console.log('Process all keys ended');
     console.time('Generate HTML template');
@@ -207,8 +208,10 @@ async function handleFetch(request, env) {
     </body>
     </html>
     `;
-    console.timeEnd('Generate HTML template');
-    console.timeEnd('handleFetch total time');
+    const generateHTMLEndTime = Date.now();
+    console.log(`Generate HTML template took ${generateHTMLEndTime - generateHTMLStartTime} ms`);
+    const handleFetchEndTime = Date.now();
+    console.log(`handleFetch total time took ${handleFetchEndTime - handleFetchStartTime} ms`);
     console.log('Generate HTML template ended');
     console.timeEnd('Generate HTML template');
     console.log('Generate HTML template ended');
