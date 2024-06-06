@@ -106,7 +106,7 @@ async function handleFetch(request, env) {
     const processKeysStartTime = Date.now();
     console.time('Process all keys');
     console.log('Process all keys started');
-    for (const key of allKeys) {
+    await Promise.all(allKeys.map(async (key) => {
         const value = await voltage.get(key.name);
         const parsedValue = JSON.parse(value);
         if (parsedValue) {
@@ -117,7 +117,7 @@ async function handleFetch(request, env) {
         } else {
             console.warn(`Parsed value for key ${key.name} is null`);
         }
-    }
+    }));
 
     const processKeysEndTime = Date.now();
     console.log(`Process all keys took ${processKeysEndTime - processKeysStartTime} ms`);
