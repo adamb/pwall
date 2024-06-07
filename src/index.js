@@ -192,7 +192,8 @@ async function handleFetch(request, env) {
             return new Response('Parsed value is null.', { status: 500 });
         }
 
-        return new Response(JSON.stringify(parsedValue), { status: 200, headers: { 'Content-Type': 'application/json' } });
+        const formattedJSON = JSON.stringify(parsedValue, null, 2); // Format JSON with 2 spaces indentation
+        return new Response(formattedJSON, { status: 200, headers: { 'Content-Type': 'application/json' } });
     }
 }
 
