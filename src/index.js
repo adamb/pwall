@@ -181,7 +181,7 @@ async function handleFetch(request, env) {
         return new Response(htmlTemplate, { status: 200, headers: { 'Content-Type': 'text/html' } });
     } else {
         const currentPuertoRicoDate = getUTCToPuertoRicoISODate(new Date()).slice(0, 10);
-        const latestKey = await voltage.list({ prefix: currentPuertoRicoDate, limit: 1, order: 'desc' });
+        const latestKey = await voltage.list({ prefix: currentPuertoRicoDate, limit: 1 });
         if (!latestKey || !latestKey.keys || latestKey.keys.length === 0) {
             return new Response('No keys found in KV storage.', { status: 404 });
         }
