@@ -180,7 +180,8 @@ async function handleFetch(request, env) {
         console.log('Generate HTML template ended');
         return new Response(htmlTemplate, { status: 200, headers: { 'Content-Type': 'text/html' } });
     } else {
-        const latestKey = await voltage.list({ limit: 1, order: 'desc' });
+        const currentPuertoRicoDate = getUTCToPuertoRicoISODate(new Date()).slice(0, 10);
+        const latestKey = await voltage.list({ prefix: currentPuertoRicoDate, limit: 1, order: 'desc' });
         if (!latestKey || !latestKey.keys || latestKey.keys.length === 0) {
             return new Response('No keys found in KV storage.', { status: 404 });
         }
