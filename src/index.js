@@ -59,7 +59,6 @@ async function handleFetch(request, env) {
             return new Response('No keys found in KV storage.', { status: 404 });
         }
 
-        let allKeysValues = {};
         const oneDayAgo = new Date(currentDate.getTime() - 24 * 60 * 60 * 1000);
         const oneDayAgoISO = getUTCToPuertoRicoISODate(oneDayAgo);
 
@@ -193,7 +192,7 @@ async function handleFetch(request, env) {
             return new Response('No keys found in KV storage.', { status: 404 });
         }
 
-        let allKeysValues = {};
+        const allKeysValues = {};
         await Promise.all(allKeys.map(async (key) => {
             const value = await voltage.get(key.name);
             const parsedValue = JSON.parse(value);
