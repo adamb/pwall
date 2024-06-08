@@ -28,7 +28,7 @@ async function handleFetch(request, env) {
     const url = new URL(request.url);
     const voltage = env.voltage;
 
-    if (url.pathname === '/voltage') {
+    if (url.pathname === '/voltage24') {
         const handleFetchStartTime = Date.now();
         console.log('handleFetch started');
         const fetchKeysStartTime = Date.now();
