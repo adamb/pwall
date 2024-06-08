@@ -222,21 +222,6 @@ async function handleFetch(request, env) {
         const formattedJSON = JSON.stringify(parsedValue, null, 2); // Format JSON with 2 spaces indentation
         return new Response(formattedJSON, { status: 200, headers: { 'Content-Type': 'application/json' } });
     }
-        const currentPuertoRicoDate = getUTCToPuertoRicoISODate(new Date()).slice(0, 10);
-        const latestKey = await voltage.list({ prefix: currentPuertoRicoDate, limit: 1 });
-        if (!latestKey || !latestKey.keys || latestKey.keys.length === 0) {
-            return new Response('No keys found in KV storage.', { status: 404 });
-        }
-
-        const latestValue = await voltage.get(latestKey.keys[0].name);
-        const parsedValue = JSON.parse(latestValue);
-        if (!parsedValue) {
-            return new Response('Parsed value is null.', { status: 500 });
-        }
-
-        const formattedJSON = JSON.stringify(parsedValue, null, 2); // Format JSON with 2 spaces indentation
-        return new Response(formattedJSON, { status: 200, headers: { 'Content-Type': 'application/json' } });
-    }
 }
 
 
