@@ -179,7 +179,49 @@ async function handleFetch(request, env) {
         console.log(`handleFetch total time took ${handleFetchEndTime - handleFetchStartTime} ms`);
         console.log('Generate HTML template ended');
         return new Response(htmlTemplate, { status: 200, headers: { 'Content-Type': 'text/html' } });
+    } else if (url.pathname === '/json') {
+        let allKeys = [];
+        let cursor = null;
+
+        do {
+            const response = await voltage.list({ cursor });
+            allKeys = allKeys.concat(response.keys);
+            cursor = response.cursor;
+        } while (cursor);
+
+        if (allKeys.length === 0) {
+            return new Response('No keys found in KV storage.', { status: 404 });
+        }
+
+        let allKeysValues = {};
+        await Promise.all(allKeys.map(async (key) => {
+            const value = await voltage.get(key.name);
+            const parsedValue = JSON.parse(value);
+            if (parsedValue) {
+                allKeysValues[key.name] = parsedValue;
+            } else {
+                console.warn(`Parsed value for key ${key.name} is null`);
+            }
+        }));
+
+        const formattedJSON = JSON.stringify(allKeysValues, null, 2); // Format JSON with 2 spaces indentation
+        return new Response(formattedJSON, { status: 200, headers: { 'Content-Type': 'application/json' } });
     } else {
+        const currentPuertoRicoDate = getUTCToPuertoRicoISODate(new Date()).slice(0, 10);
+        const latestKey = await voltage.list({ prefix: currentPuertoRicoDate, limit: 1 });
+        if (!latestKey || !latestKey.keys || latestKey.keys.length === 0) {
+            return new Response('No keys found in KV storage.', { status: 404 });
+        }
+
+        const latestValue = await voltage.get(latestKey.keys[0].name);
+        const parsedValue = JSON.parse(latestValue);
+        if (!parsedValue) {
+            return new Response('Parsed value is null.', { status: 500 });
+        }
+
+        const formattedJSON = JSON.stringify(parsedValue, null, 2); // Format JSON with 2 spaces indentation
+        return new Response(formattedJSON, { status: 200, headers: { 'Content-Type': 'application/json' } });
+    }
         const currentPuertoRicoDate = getUTCToPuertoRicoISODate(new Date()).slice(0, 10);
         const latestKey = await voltage.list({ prefix: currentPuertoRicoDate, limit: 1 });
         if (!latestKey || !latestKey.keys || latestKey.keys.length === 0) {
