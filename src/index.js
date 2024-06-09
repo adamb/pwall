@@ -182,16 +182,45 @@ async function handleJson(env) {
 
         const jsonContent = JSON.stringify({ getCalls, data: allKeysValues }, null, 2);
         console.log(`Total get calls: ${getCalls}`);
-        return new Response(jsonContent, {
+        const htmlTemplate = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Voltage Data</title>
+        </head>
+        <body>
+            <h1>Voltage Data</h1>
+            <p>Total get calls: ${getCalls}</p>
+            <pre>${jsonContent}</pre>
+        </body>
+        </html>
+        `;
+        return new Response(htmlTemplate, {
             status: 200,
             headers: {
-                'Content-Type': 'application/json',
-                'Content-Disposition': 'attachment; filename="voltage_data.json"'
+                'Content-Type': 'text/html'
             }
         });
     } catch (error) {
         console.error(`Error during get calls: ${error}`);
-        return new Response(JSON.stringify({ error: 'Error fetching data from KV storage.', getCalls }), { status: 500 });
+        const errorHtmlTemplate = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Error</title>
+        </head>
+        <body>
+            <h1>Error fetching data from KV storage</h1>
+            <p>Total get calls: ${getCalls}</p>
+            <pre>${JSON.stringify({ error: 'Error fetching data from KV storage.', getCalls }, null, 2)}</pre>
+        </body>
+        </html>
+        `;
+        return new Response(errorHtmlTemplate, { status: 500 });
     }
 }
 
