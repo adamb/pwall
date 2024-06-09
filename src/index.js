@@ -179,6 +179,8 @@ async function handleJson(env) {
             }
         }));
 
+        getCalls = getCallsResults.reduce((acc, curr) => acc + curr, 0);
+
         const jsonContent = JSON.stringify({ data: allKeysValues }, null, 2);
         const htmlTemplate = `
         <!DOCTYPE html>
