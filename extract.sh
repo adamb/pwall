@@ -5,13 +5,12 @@ KV_NAMESPACE_ID="35d9ba93bccd4316b27a48bc72ceddad"
 
 # List all keys in the namespace and handle pagination
 KEYS=()
-CURSOR=""
+LIMIT=1000
 while :; do
-  RESPONSE=$(wrangler kv:key list --namespace-id $KV_NAMESPACE_ID --cursor $CURSOR --preview false)
+  RESPONSE=$(wrangler kv:key list --namespace-id $KV_NAMESPACE_ID --limit $LIMIT --preview false)
   NEW_KEYS=$(echo $RESPONSE | jq -r '.[].name')
   KEYS+=($NEW_KEYS)
-  CURSOR=$(echo $RESPONSE | jq -r '.cursor')
-  if [ "$CURSOR" == "null" ]; then
+  if [ $(echo $NEW_KEYS | wc -w) -lt $LIMIT ]; then
     break
   fi
 done
