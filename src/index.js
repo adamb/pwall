@@ -180,7 +180,7 @@ async function handleJson(env) {
 
         const getCalls = getCallsResults.reduce((acc, curr) => acc + curr, 0);
 
-        const jsonContent = JSON.stringify(allKeysValues, null, 2);
+        const jsonContent = JSON.stringify({ getCalls, data: allKeysValues }, null, 2);
         console.log(`Total get calls: ${getCalls}`);
         return new Response(jsonContent, {
             status: 200,
@@ -191,7 +191,7 @@ async function handleJson(env) {
         });
     } catch (error) {
         console.error(`Error during get calls: ${error}`);
-        return new Response('Error fetching data from KV storage.', { status: 500 });
+        return new Response(JSON.stringify({ error: 'Error fetching data from KV storage.', getCalls }), { status: 500 });
     }
 }
 
