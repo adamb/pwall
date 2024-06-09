@@ -6,3 +6,6 @@
 
 node_modules
 .wrangler
+
+# KV dump file
+kv_dump.json
