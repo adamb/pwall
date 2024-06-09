@@ -179,9 +179,6 @@ async function handleJson(env) {
             }
         }));
 
-        getCalls = getCallsResults.reduce((acc, curr) => acc + curr, 0);
-
-        console.log(`Total get calls: ${getCalls}`);
         const jsonContent = JSON.stringify({ data: allKeysValues }, null, 2);
         const htmlTemplate = `
         <!DOCTYPE html>
@@ -206,6 +203,7 @@ async function handleJson(env) {
         });
     } catch (error) {
         console.error(`Error during get calls: ${error}`);
+        getCalls = getCallsResults.reduce((acc, curr) => acc + curr, 0);
         const errorHtmlTemplate = `
         <!DOCTYPE html>
         <html lang="en">
