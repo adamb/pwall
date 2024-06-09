@@ -7,16 +7,21 @@ KV_NAMESPACE_ID="35d9ba93bccd4316b27a48bc72ceddad"
 
 # List all keys in the namespace and handle pagination
 KEYS=()
-CURSOR=""
+LIMIT=1000
+LAST_KEY=""
 while :; do
-  RESPONSE=$(wrangler kv:key list --namespace-id $KV_NAMESPACE_ID --cursor $CURSOR --preview false)
+  if [ -z "$LAST_KEY" ]; then
+    RESPONSE=$(wrangler kv:key list --namespace-id $KV_NAMESPACE_ID --limit $LIMIT --preview false)
+  else
+    RESPONSE=$(wrangler kv:key list --namespace-id $KV_NAMESPACE_ID --limit $LIMIT --preview false --prefix $LAST_KEY)
+  fi
   echo "Response from kv:key list: $RESPONSE"  # Debugging line
   NEW_KEYS=$(echo $RESPONSE | jq -r '.keys[].name')
   KEYS+=($NEW_KEYS)
-  CURSOR=$(echo $RESPONSE | jq -r '.cursor')
-  if [ "$CURSOR" == "null" ]; then
+  if [ ${#NEW_KEYS[@]} -lt $LIMIT ]; then
     break
   fi
+  LAST_KEY=${NEW_KEYS[-1]}
 done
 
 # Initialize an empty JSON object
