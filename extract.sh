@@ -8,6 +8,7 @@ KEYS=()
 LIMIT=1000
 while :; do
   RESPONSE=$(wrangler kv:key list --namespace-id $KV_NAMESPACE_ID --limit $LIMIT --preview false)
+  echo "Response from kv:key list: $RESPONSE"  # Debugging line
   NEW_KEYS=$(echo $RESPONSE | jq -r '.[].name')
   KEYS+=($NEW_KEYS)
   if [ $(echo $NEW_KEYS | wc -w) -lt $LIMIT ]; then
@@ -20,7 +21,9 @@ echo "{" > kv_dump.json
 
 # Iterate through the keys and fetch their values
 for KEY in "${KEYS[@]}"; do
-  VALUE=$(wrangler kv:key get $KEY --namespace-id $KV_NAMESPACE_ID --preview false | jq -R -s .)
+  VALUE=$(wrangler kv:key get $KEY --namespace-id $KV_NAMESPACE_ID --preview false)
+  echo "Response from kv:key get for $KEY: $VALUE"  # Debugging line
+  VALUE=$(echo $VALUE | jq -R -s .)
   echo "\"$KEY\": $VALUE," >> kv_dump.json
 done
 
