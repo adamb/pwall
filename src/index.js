@@ -166,8 +166,9 @@ async function handleJson(env) {
 
     const allKeysValues = {};
     let getCalls = 0;
+    let getCallsResults = [];
     try {
-        const getCallsResults = await Promise.all(allKeys.map(async (key) => {
+        getCallsResults = await Promise.all(allKeys.map(async (key) => {
             const value = await voltage.get(key.name);
             const parsedValue = JSON.parse(value);
             if (parsedValue) {
