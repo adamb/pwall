@@ -182,6 +182,7 @@ async function handleJson(env) {
 
         const jsonContent = JSON.stringify({ getCalls, data: allKeysValues }, null, 2);
         console.log(`Total get calls: ${getCalls}`);
+        const jsonContent = JSON.stringify({ getCalls, data: allKeysValues }, null, 2);
         const htmlTemplate = `
         <!DOCTYPE html>
         <html lang="en">
@@ -193,7 +194,8 @@ async function handleJson(env) {
         <body>
             <h1>Voltage Data</h1>
             <p>Total get calls: ${getCalls}</p>
-            <pre>${jsonContent}</pre>
+            <a href="data:text/json;charset=utf-8,${encodeURIComponent(jsonContent)}" download="voltage_data.json">Download JSON</a>
+            <pre>${JSON.stringify({ getCalls, data: allKeysValues }, null, 2)}</pre>
         </body>
         </html>
         `;
