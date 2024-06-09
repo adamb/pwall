@@ -203,7 +203,6 @@ async function handleFetch(request, env) {
             return new Response('No keys found in KV storage.', { status: 404 });
         }
 
-        const allKeysValues = {};
         await Promise.all(oneHourAgoKeys.keys.map(async (key) => {
             const value = await voltage.get(key.name);
             const parsedValue = JSON.parse(value);
