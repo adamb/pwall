@@ -3,6 +3,8 @@
 # Set your KV namespace ID
 KV_NAMESPACE_ID="35d9ba93bccd4316b27a48bc72ceddad"
 
+# wrangler kv:key list {--binding=<BINDING>|--namespace-id=<NAMESPACE_ID>} [OPTIONS]
+
 # List all keys in the namespace and handle pagination
 KEYS=()
 CURSOR=""
