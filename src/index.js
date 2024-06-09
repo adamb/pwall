@@ -189,22 +189,33 @@ async function handleFetch(request, env) {
         }
 
         const currentDate = new Date();
+        const currentHourISO = getUTCToPuertoRicoISODate(currentDate).slice(0, 13); // Get the current date and hour in ISO format
+        const previousHourDate = new Date(currentDate.getTime() - 60 * 60 * 1000);
+        const previousHourISO = getUTCToPuertoRicoISODate(previousHourDate).slice(0, 13); // Get the previous date and hour in ISO format
+
+        console.log(`current hour prefix: ${currentHourISO} ${currentDate}`);
+        console.log(`previous hour prefix: ${previousHourISO} ${previousHourDate}`);
+
+        const currentHourKeys = await voltage.list({ prefix: currentHourISO });
+        const previousHourKeys = await voltage.list({ prefix: previousHourISO });
+
+        const allKeys = [...(previousHourKeys.keys || []), ...(currentHourKeys.keys || [])];
+
         const oneHourAgo = new Date(currentDate.getTime() - 60 * 60 * 1000);
-        const oneHourAgoISO = getUTCToPuertoRicoISODate(oneHourAgo);
-        const oneHourAgoPrefix = oneHourAgoISO.slice(0, 13); // Get the date and hour in ISO format
 
-        console.log(`one hour ago prefix: ${oneHourAgoPrefix} ${oneHourAgo}`);
-
-        const oneHourAgoKeys = await voltage.list({ prefix: oneHourAgoPrefix });
+        const filteredKeys = allKeys.filter(key => {
+            const keyDate = new Date(key.name);
+            return keyDate >= oneHourAgo;
+        });
 
         const fetchKeysEndTime = Date.now();
-        console.log(`Fetch keys from the previous hour took ${fetchKeysEndTime - fetchKeysStartTime} ms`);
+        console.log(`Fetch keys from the current and previous hour took ${fetchKeysEndTime - fetchKeysStartTime} ms`);
 
-        if (!oneHourAgoKeys || !oneHourAgoKeys.keys || oneHourAgoKeys.keys.length === 0) {
+        if (filteredKeys.length === 0) {
             return new Response('No keys found in KV storage.', { status: 404 });
         }
 
-        await Promise.all(oneHourAgoKeys.keys.map(async (key) => {
+        await Promise.all(filteredKeys.map(async (key) => {
             const value = await voltage.get(key.name);
             const parsedValue = JSON.parse(value);
             if (parsedValue) {
