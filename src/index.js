@@ -23,6 +23,128 @@ export default {
 
 import { getUTCToPuertoRicoISODate } from './utils';
 
+async function handleVoltage(env) {
+    const handleFetchStartTime = Date.now();
+    console.log('handleFetch started');
+    const fetchKeysStartTime = Date.now();
+    console.log('Fetch keys from the previous hour started');
+    const voltage = env.voltage;
+    if (!voltage) {
+        return new Response('KV storage is not properly initialized.', { status: 500 });
+    }
+
+    const currentDate = new Date();
+    const currentHourISO = getUTCToPuertoRicoISODate(currentDate).slice(0, 13); // Get the current date and hour in ISO format
+    const previousHourDate = new Date(currentDate.getTime() - 60 * 60 * 1000);
+    const previousHourISO = getUTCToPuertoRicoISODate(previousHourDate).slice(0, 13); // Get the previous date and hour in ISO format
+
+    console.log(`current hour prefix: ${currentHourISO} ${currentDate}`);
+    console.log(`previous hour prefix: ${previousHourISO} ${previousHourDate}`);
+
+    const currentHourKeys = await voltage.list({ prefix: currentHourISO });
+    const previousHourKeys = await voltage.list({ prefix: previousHourISO });
+
+    const allKeys = [...(previousHourKeys.keys || []), ...(currentHourKeys.keys || [])];
+
+    const oneHourAgo = new Date(currentDate.getTime() - 60 * 60 * 1000);
+
+    const filteredKeys = allKeys.filter(key => {
+        const keyDate = new Date(key.name);
+        return keyDate >= oneHourAgo;
+    });
+
+    const fetchKeysEndTime = Date.now();
+    console.log(`Fetch keys from the current and previous hour took ${fetchKeysEndTime - fetchKeysStartTime} ms`);
+
+    if (filteredKeys.length === 0) {
+        return new Response('No keys found in KV storage.', { status: 404 });
+    }
+
+    const allKeysValues = {};
+    await Promise.all(filteredKeys.map(async (key) => {
+        const value = await voltage.get(key.name);
+        const parsedValue = JSON.parse(value);
+        if (parsedValue) {
+            allKeysValues[key.name] = {
+                v_l1n: parsedValue.v_l1n,
+                v_l2n: parsedValue.v_l2n
+            };
+        } else {
+            console.warn(`Parsed value for key ${key.name} is null`);
+        }
+    }));
+
+    const generateHTMLStartTime = Date.now();
+    console.log('Generate HTML template started');
+    const htmlTemplate = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Voltage Chart</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <canvas id="voltageChart" width="400" height="200"></canvas>
+        <script>
+            const ctx = document.getElementById('voltageChart').getContext('2d');
+            const voltageData = ${JSON.stringify(allKeysValues)};
+            const keys = Object.keys(voltageData);
+            const labels = keys.map(key => key.slice(0, 16)); // Extract year, month, day, hour, and minute
+            const v_l1nData = keys.map(key => voltageData[key].v_l1n);
+            const v_l2nData = keys.map(key => voltageData[key].v_l2n);
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Voltage L1-N',
+                            data: v_l1nData,
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'Voltage L2-N',
+                            data: v_l2nData,
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Voltage (V)'
+                            }
+                        }
+                    }
+                }
+            });
+        </script>
+    </body>
+    </html>
+    `;
+    const generateHTMLEndTime = Date.now();
+    console.log(`Generate HTML template took ${generateHTMLEndTime - generateHTMLStartTime} ms`);
+    const handleFetchEndTime = Date.now();
+    console.log(`handleFetch total time took ${handleFetchEndTime - handleFetchStartTime} ms`);
+    console.log('Generate HTML template ended');
+    return new Response(htmlTemplate, { status: 200, headers: { 'Content-Type': 'text/html' } });
+}
+
 
 async function handleFetch(request, env) {
     const url = new URL(request.url);
@@ -180,123 +302,7 @@ async function handleFetch(request, env) {
         console.log('Generate HTML template ended');
         return new Response(htmlTemplate, { status: 200, headers: { 'Content-Type': 'text/html' } });
     } else if (url.pathname === '/voltage') {
-        const handleFetchStartTime = Date.now();
-        console.log('handleFetch started');
-        const fetchKeysStartTime = Date.now();
-        console.log('Fetch keys from the previous hour started');
-        if (!voltage) {
-            return new Response('KV storage is not properly initialized.', { status: 500 });
-        }
-
-        const currentDate = new Date();
-        const currentHourISO = getUTCToPuertoRicoISODate(currentDate).slice(0, 13); // Get the current date and hour in ISO format
-        const previousHourDate = new Date(currentDate.getTime() - 60 * 60 * 1000);
-        const previousHourISO = getUTCToPuertoRicoISODate(previousHourDate).slice(0, 13); // Get the previous date and hour in ISO format
-
-        console.log(`current hour prefix: ${currentHourISO} ${currentDate}`);
-        console.log(`previous hour prefix: ${previousHourISO} ${previousHourDate}`);
-
-        const currentHourKeys = await voltage.list({ prefix: currentHourISO });
-        const previousHourKeys = await voltage.list({ prefix: previousHourISO });
-
-        const allKeys = [...(previousHourKeys.keys || []), ...(currentHourKeys.keys || [])];
-
-        const oneHourAgo = new Date(currentDate.getTime() - 60 * 60 * 1000);
-
-        const filteredKeys = allKeys.filter(key => {
-            const keyDate = new Date(key.name);
-            return keyDate >= oneHourAgo;
-        });
-
-        const fetchKeysEndTime = Date.now();
-        console.log(`Fetch keys from the current and previous hour took ${fetchKeysEndTime - fetchKeysStartTime} ms`);
-
-        if (filteredKeys.length === 0) {
-            return new Response('No keys found in KV storage.', { status: 404 });
-        }
-
-        await Promise.all(filteredKeys.map(async (key) => {
-            const value = await voltage.get(key.name);
-            const parsedValue = JSON.parse(value);
-            if (parsedValue) {
-                allKeysValues[key.name] = {
-                    v_l1n: parsedValue.v_l1n,
-                    v_l2n: parsedValue.v_l2n
-                };
-            } else {
-                console.warn(`Parsed value for key ${key.name} is null`);
-            }
-        }));
-
-        const generateHTMLStartTime = Date.now();
-        console.log('Generate HTML template started');
-        const htmlTemplate = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Voltage Chart</title>
-            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-        </head>
-        <body>
-            <canvas id="voltageChart" width="400" height="200"></canvas>
-            <script>
-                const ctx = document.getElementById('voltageChart').getContext('2d');
-                const voltageData = ${JSON.stringify(allKeysValues)};
-                const keys = Object.keys(voltageData);
-                const labels = keys.map(key => key.slice(0, 16)); // Extract year, month, day, hour, and minute
-                const v_l1nData = keys.map(key => voltageData[key].v_l1n);
-                const v_l2nData = keys.map(key => voltageData[key].v_l2n);
-
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [
-                            {
-                                label: 'Voltage L1-N',
-                                data: v_l1nData,
-                                borderColor: 'rgba(75, 192, 192, 1)',
-                                borderWidth: 1,
-                                fill: false
-                            },
-                            {
-                                label: 'Voltage L2-N',
-                                data: v_l2nData,
-                                borderColor: 'rgba(153, 102, 255, 1)',
-                                borderWidth: 1,
-                                fill: false
-                            }
-                        ]
-                    },
-                    options: {
-                        scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Time'
-                                }
-                            },
-                            y: {
-                                title: {
-                                    display: true,
-                                    text: 'Voltage (V)'
-                                }
-                            }
-                        }
-                    }
-                });
-            </script>
-        </body>
-        </html>
-        `;
-        const generateHTMLEndTime = Date.now();
-        console.log(`Generate HTML template took ${generateHTMLEndTime - generateHTMLStartTime} ms`);
-        const handleFetchEndTime = Date.now();
-        console.log(`handleFetch total time took ${handleFetchEndTime - handleFetchStartTime} ms`);
-        console.log('Generate HTML template ended');
-        return new Response(htmlTemplate, { status: 200, headers: { 'Content-Type': 'text/html' } });
+        return handleVoltage(env);
         let allKeys = [];
         let cursor = null;
 
