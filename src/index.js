@@ -165,19 +165,20 @@ async function handleJson(env) {
     }
 
     const allKeysValues = {};
-    let getCalls = 0;
-
     try {
-        await Promise.all(allKeys.map(async (key) => {
+        const getCallsResults = await Promise.all(allKeys.map(async (key) => {
             const value = await voltage.get(key.name);
-            getCalls++;
             const parsedValue = JSON.parse(value);
             if (parsedValue) {
                 allKeysValues[key.name] = parsedValue;
+                return 1;
             } else {
                 console.warn(`Parsed value for key ${key.name} is null`);
+                return 0;
             }
         }));
+
+        const getCalls = getCallsResults.reduce((acc, curr) => acc + curr, 0);
 
         const jsonContent = JSON.stringify(allKeysValues, null, 2);
         console.log(`Total get calls: ${getCalls}`);
@@ -190,7 +191,6 @@ async function handleJson(env) {
         });
     } catch (error) {
         console.error(`Error during get calls: ${error}`);
-        console.log(`Total get calls: ${getCalls}`);
         return new Response('Error fetching data from KV storage.', { status: 500 });
     }
 }
