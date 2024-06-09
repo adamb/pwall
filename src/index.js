@@ -165,6 +165,7 @@ async function handleJson(env) {
     }
 
     const allKeysValues = {};
+    let getCalls = 0;
     try {
         const getCallsResults = await Promise.all(allKeys.map(async (key) => {
             const value = await voltage.get(key.name);
@@ -178,7 +179,7 @@ async function handleJson(env) {
             }
         }));
 
-        const getCalls = getCallsResults.reduce((acc, curr) => acc + curr, 0);
+        getCalls = getCallsResults.reduce((acc, curr) => acc + curr, 0);
 
         console.log(`Total get calls: ${getCalls}`);
         const jsonContent = JSON.stringify({ data: allKeysValues }, null, 2);
