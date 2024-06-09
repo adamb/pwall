@@ -11,9 +11,9 @@ LIMIT=1000
 LAST_KEY=""
 while :; do
   if [ -z "$LAST_KEY" ]; then
-    RESPONSE=$(wrangler kv:key list --namespace-id $KV_NAMESPACE_ID --limit $LIMIT --preview false)
+    RESPONSE=$(wrangler kv:key list --namespace-id $KV_NAMESPACE_ID --preview false)
   else
-    RESPONSE=$(wrangler kv:key list --namespace-id $KV_NAMESPACE_ID --limit $LIMIT --preview false --prefix $LAST_KEY)
+    RESPONSE=$(wrangler kv:key list --namespace-id $KV_NAMESPACE_ID --preview false --prefix $LAST_KEY)
   fi
   echo "Response from kv:key list: $RESPONSE"  # Debugging line
   NEW_KEYS=$(echo $RESPONSE | jq -r '.keys[].name')
