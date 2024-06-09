@@ -303,6 +303,8 @@ async function handleFetch(request, env) {
         return new Response(htmlTemplate, { status: 200, headers: { 'Content-Type': 'text/html' } });
     } else if (url.pathname === '/voltage') {
         return handleVoltage(env);
+    } else if (url.pathname === '/json') {
+        return handleJson(env)
     } else {
         const currentPuertoRicoDate = getUTCToPuertoRicoISODate(new Date()).slice(0, 10);
         const latestKey = await voltage.list({ prefix: currentPuertoRicoDate, limit: 1 });
