@@ -165,24 +165,34 @@ async function handleJson(env) {
     }
 
     const allKeysValues = {};
-    await Promise.all(allKeys.map(async (key) => {
-        const value = await voltage.get(key.name);
-        const parsedValue = JSON.parse(value);
-        if (parsedValue) {
-            allKeysValues[key.name] = parsedValue;
-        } else {
-            console.warn(`Parsed value for key ${key.name} is null`);
-        }
-    }));
+    let getCalls = 0;
 
-    const jsonContent = JSON.stringify(allKeysValues, null, 2);
-    return new Response(jsonContent, {
-        status: 200,
-        headers: {
-            'Content-Type': 'application/json',
-            'Content-Disposition': 'attachment; filename="voltage_data.json"'
-        }
-    });
+    try {
+        await Promise.all(allKeys.map(async (key) => {
+            const value = await voltage.get(key.name);
+            getCalls++;
+            const parsedValue = JSON.parse(value);
+            if (parsedValue) {
+                allKeysValues[key.name] = parsedValue;
+            } else {
+                console.warn(`Parsed value for key ${key.name} is null`);
+            }
+        }));
+
+        const jsonContent = JSON.stringify(allKeysValues, null, 2);
+        console.log(`Total get calls: ${getCalls}`);
+        return new Response(jsonContent, {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Disposition': 'attachment; filename="voltage_data.json"'
+            }
+        });
+    } catch (error) {
+        console.error(`Error during get calls: ${error}`);
+        console.log(`Total get calls: ${getCalls}`);
+        return new Response('Error fetching data from KV storage.', { status: 500 });
+    }
 }
 
 async function handleFetch(request, env) {
