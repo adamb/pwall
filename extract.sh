@@ -16,7 +16,7 @@ while :; do
     RESPONSE=$(wrangler kv:key list --namespace-id $KV_NAMESPACE_ID --preview false --prefix $LAST_KEY)
   fi
   echo "Response from kv:key list: $RESPONSE"  # Debugging line
-  NEW_KEYS=$(echo $RESPONSE | jq -r '.keys[].name')
+  NEW_KEYS=$(echo $RESPONSE | jq -r '.[] | .name')
   KEYS+=($NEW_KEYS)
   if [ ${#NEW_KEYS[@]} -lt $LIMIT ]; then
     break
