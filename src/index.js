@@ -362,5 +362,45 @@ async function handleJson(env) {
     }
 }
 
+async function handleJson(env) {
+    const voltage = env.voltage;
+    if (!voltage) {
+        return new Response('KV storage is not properly initialized.', { status: 500 });
+    }
+
+    let allKeys = [];
+    let cursor = null;
+
+    do {
+        const response = await voltage.list({ cursor });
+        allKeys = allKeys.concat(response.keys);
+        cursor = response.cursor;
+    } while (cursor);
+
+    if (allKeys.length === 0) {
+        return new Response('No keys found in KV storage.', { status: 404 });
+    }
+
+    const allKeysValues = {};
+    await Promise.all(allKeys.map(async (key) => {
+        const value = await voltage.get(key.name);
+        const parsedValue = JSON.parse(value);
+        if (parsedValue) {
+            allKeysValues[key.name] = parsedValue;
+        } else {
+            console.warn(`Parsed value for key ${key.name} is null`);
+        }
+    }));
+
+    const jsonContent = JSON.stringify(allKeysValues, null, 2);
+    return new Response(jsonContent, {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Disposition': 'attachment; filename="voltage_data.json"'
+        }
+    });
+}
+
 
 
