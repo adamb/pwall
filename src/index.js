@@ -167,8 +167,17 @@ async function handleJson(env) {
     const allKeysValues = {};
     let getCalls = 0;
     let getCallsResults = [];
+    const batchPromises = async (items, batchSize, fn) => {
+        const results = [];
+        for (let i = 0; i < items.length; i += batchSize) {
+            const batch = items.slice(i, i + batchSize).map(fn);
+            results.push(...await Promise.all(batch));
+        }
+        return results;
+    };
+
     try {
-        getCallsResults = await Promise.all(allKeys.map(async (key) => {
+        getCallsResults = await batchPromises(allKeys, 6, async (key) => {
             const value = await voltage.get(key.name);
             const parsedValue = JSON.parse(value);
             if (parsedValue) {
@@ -178,7 +187,7 @@ async function handleJson(env) {
                 console.warn(`Parsed value for key ${key.name} is null`);
                 return 0;
             }
-        }));
+        });
 
         getCalls = getCallsResults.reduce((acc, curr) => acc + curr, 0);
 
