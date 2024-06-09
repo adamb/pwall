@@ -51,6 +51,7 @@ async function handleFetch(request, env) {
         const currentDayKeys = await voltage.list({ prefix: currentDayPrefix });
         const previousDayKeys = await voltage.list({ prefix: previousDayPrefix });
 
+        const allKeysValues = {};
         const fetchKeysEndTime = Date.now();
         console.log(`Fetch current and previous day keys took ${fetchKeysEndTime - fetchKeysStartTime} ms`);
 
