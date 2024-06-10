@@ -7,7 +7,7 @@ async function login(env) {
     const requestBody = JSON.stringify({
         username: 'customer',
         password: env.TESLA_PASSWORD,
-        email: 'adam@beguelin.com',
+        email: env.EMAIL,
         force_sm_off: false
     });
 
