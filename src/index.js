@@ -395,8 +395,8 @@ async function handleFetch(request, env) {
     } else if (url.pathname === '/json') {
         return handleJson(env)
     } else if (url.pathname === '/') {
-        const htmlContent = await import('./staticHtml.js');
-        return new Response(htmlContent, { status: 200, headers: { 'Content-Type': 'text/html' } });
+        import htmlContent from './staticHtml.js';
+        return new Response(htmlContent.default, { status: 200, headers: { 'Content-Type': 'text/html' } });
         const currentPuertoRicoDate = getUTCToPuertoRicoISODate(new Date()).slice(0, 10);
         const latestKey = await voltage.list({ prefix: currentPuertoRicoDate, limit: 1 });
         if (!latestKey || !latestKey.keys || latestKey.keys.length === 0) {
