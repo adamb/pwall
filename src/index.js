@@ -24,8 +24,21 @@ export default {
 
 import { getUTCToPuertoRicoISODate } from './utils';
 
-async function handleSOE(env) {
+import { getSystemStatusSOE } from './pwall';
 
+async function handleSOE(env) {
+    try {
+        const systemStatus = await getSystemStatusSOE(env);
+        return new Response(JSON.stringify(systemStatus), {
+            status: 200,
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+    } catch (error) {
+        console.error('Error fetching system status:', error);
+        return new Response('Failed to fetch system status', { status: 500 });
+    }
 }
 
 
