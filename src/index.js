@@ -10,8 +10,10 @@
  * Learn more at https://developers.cloudflare.com/workers/runtime-apis/scheduled-event/
  */
 
-import main from './pwall';
+import { main, getSystemStatusSOE } from './pwall';
 import htmlContent from './staticHtml.js';
+import { getUTCToPuertoRicoISODate } from './utils';
+
 
 export default {
 	async scheduled(controller, env, ctx) {
@@ -22,12 +24,10 @@ export default {
 	},
 };
 
-import { getUTCToPuertoRicoISODate } from './utils';
-
-import { getSystemStatusSOE } from './pwall';
 
 async function handleSOE(env) {
     try {
+        console.log('handleSOE')
         const systemStatus = await getSystemStatusSOE(env);
         return new Response(JSON.stringify(systemStatus), {
             status: 200,
