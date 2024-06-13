@@ -122,7 +122,7 @@ async function main(env) {
         const voltage = env.voltage;
 
 
-        const meterData = await getMeterAggregates(token, env);
+        const meterData = await getSystemStatusSOE(token, env);
 
         // Print the entire meterData object
         if (meterData && meterData[0].Cached_readings) {
