@@ -24,6 +24,11 @@ export default {
 
 import { getUTCToPuertoRicoISODate } from './utils';
 
+async function handleSOE(env) {
+
+}
+
+
 async function handleVoltage(env) {
     const handleFetchStartTime = Date.now();
     console.log('handleFetch started');
@@ -395,6 +400,8 @@ async function handleFetch(request, env) {
         return handleVoltage(env);
     } else if (url.pathname === '/json') {
         return handleJson(env)
+    } else if (url.pathname === '/battery') {
+        return handleSOE(env)
     } else if (url.pathname === '/') {
         return new Response(htmlContent, { status: 200, headers: { 'Content-Type': 'text/html' } });
     }
