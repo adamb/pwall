@@ -115,6 +115,44 @@ async function getSystemStatusSOE(token, env) {
     return data;
 }
 
+async function getSystemStatusSOE(token, env) {
+    const url = 'https://teg.dev.pr/api/meters/site';
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
+        'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET,
+        'Authorization': `Bearer ${token}`
+    };
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: headers
+    });
+
+    if (!response.ok) {
+        console.error('Error fetching meter site:', {
+            status: response.status,
+            statusText: response.statusText,
+            headers: [...response.headers.entries()],
+        });
+
+        let errorData;
+        try {
+            errorData = await response.json();
+        } catch (jsonError) {
+            console.error('Error parsing JSON response:', jsonError, 'Response:', response);
+            throw new Error('Failed to fetch meter site and error response could not be parsed');
+        }
+
+        console.error('Error data:', errorData);
+        throw new Error('Failed to fetch meter site');
+    }
+
+    const data = await response.json();
+    return data;
+}
+
 async function main(env) {
     try {
         const token = await login(env);
