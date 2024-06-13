@@ -150,7 +150,10 @@ async function main(env) {
     }
 }
 
-module.exports = main;
+module.exports = {
+    main,
+    getSystemStatusSOE
+};
 
 
 
