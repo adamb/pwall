@@ -1,5 +1,3 @@
-const axios = require('axios');
-const { connectDatabaseEmulator } = require('firebase/database');
 
 async function login(env) {
     const url = `https://teg.dev.pr/api/login/Basic`;
@@ -77,8 +75,11 @@ async function getMeterAggregates(token, env) {
     return data;
 }
 
-async function getSystemStatusSOE(token, env) {
-    const url = 'https://teg.dev.pr/api/meters/site';
+async function getSystemStatusSOE(env) {
+
+    const token = await login(env);
+
+    const url = 'https://teg.dev.pr/api/system_status/soe';
 
     const headers = {
         'Content-Type': 'application/json',
@@ -93,45 +94,7 @@ async function getSystemStatusSOE(token, env) {
     });
 
     if (!response.ok) {
-        console.error('Error fetching meter site:', {
-            status: response.status,
-            statusText: response.statusText,
-            headers: [...response.headers.entries()],
-        });
-
-        let errorData;
-        try {
-            errorData = await response.json();
-        } catch (jsonError) {
-            console.error('Error parsing JSON response:', jsonError, 'Response:', response);
-            throw new Error('Failed to fetch meter site and error response could not be parsed');
-        }
-
-        console.error('Error data:', errorData);
-        throw new Error('Failed to fetch meter site');
-    }
-
-    const data = await response.json();
-    return data;
-}
-
-async function getSystemStatusSOE(token, env) {
-    const url = 'https://teg.dev.pr/api/meters/site';
-
-    const headers = {
-        'Content-Type': 'application/json',
-        'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
-        'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET,
-        'Authorization': `Bearer ${token}`
-    };
-
-    const response = await fetch(url, {
-        method: 'GET',
-        headers: headers
-    });
-
-    if (!response.ok) {
-        console.error('Error fetching meter site:', {
+        console.error('Error fetching SOE:', {
             status: response.status,
             statusText: response.statusText,
             headers: [...response.headers.entries()],
@@ -160,7 +123,7 @@ async function main(env) {
         const voltage = env.voltage;
 
 
-        const meterData = await getSystemStatusSOE(token, env);
+        const meterData = await getMeterAggregates(token, env);
 
         // Print the entire meterData object
         if (meterData && meterData[0].Cached_readings) {
