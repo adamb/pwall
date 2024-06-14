@@ -235,7 +235,7 @@ async function handleJson(env) {
         <ul>
             ${Object.entries(allKeysValues).map(([key, value]) => `
                 <li>
-                    <strong>${key}</strong>: ${JSON.stringify(value)}
+                    <strong>${key}</strong>: <pre>${JSON.stringify(value, null, 2)}</pre>
                 </li>
             `).join('')}
         </ul>
