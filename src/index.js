@@ -10,7 +10,7 @@
  * Learn more at https://developers.cloudflare.com/workers/runtime-apis/scheduled-event/
  */
 
-import { main, getSystemStatusSOE } from './pwall.js';
+import { main, getSystemStatusSOE } from './pwall';
 import htmlContent from './staticHtml.js';
 import { getUTCToPuertoRicoISODate } from './utils';
 
