@@ -186,7 +186,6 @@ async function getCurrentUsage(env) {
     const latestValue = await voltage.get(latestKey);
     const parsedValue = JSON.parse(latestValue);
 
-    console.log('Parsed Value:', parsedValue.instant_power);
     if (!parsedValue || !parsedValue.instant_power || typeof parsedValue.instant_power !== 'number') {
         throw new Error('Invalid data format in KV storage.');
     }
