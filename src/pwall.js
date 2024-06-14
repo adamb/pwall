@@ -150,7 +150,33 @@ async function main(env) {
     }
 }
 
+async function getCurrentUsage(env) {
+    const voltage = env.voltage;
+    if (!voltage) {
+        throw new Error('KV storage is not properly initialized.');
+    }
+
+    const currentDate = new Date();
+    const currentHourISO = getUTCToPuertoRicoISODate(currentDate).slice(0, 13); // Get the current date and hour in ISO format
+    const currentHourKeys = await voltage.list({ prefix: currentHourISO });
+
+    if (!currentHourKeys.keys || currentHourKeys.keys.length === 0) {
+        throw new Error('No keys found in KV storage.');
+    }
+
+    const latestKey = currentHourKeys.keys[currentHourKeys.keys.length - 1].name;
+    const latestValue = await voltage.get(latestKey);
+    const parsedValue = JSON.parse(latestValue);
+
+    if (!parsedValue || !parsedValue.load || typeof parsedValue.load.instant_power !== 'number') {
+        throw new Error('Invalid data format in KV storage.');
+    }
+
+    return parsedValue.load.instant_power;
+}
+
 module.exports = {
+    getCurrentUsage,
     main,
     getSystemStatusSOE
 };
