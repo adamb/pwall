@@ -2,8 +2,22 @@
 import { getUTCToPuertoRicoISODate } from './utils';
 
 async function login(env) {
-    const url = `https://teg.dev.pr/api/login/Basic`;
+    const voltage = env.voltage;
+    if (!voltage) {
+        throw new Error('KV storage is not properly initialized.');
+    }
 
+    const tokenData = await voltage.get('token');
+    if (tokenData) {
+        const { token, timestamp } = JSON.parse(tokenData);
+        const tokenAge = (Date.now() - new Date(timestamp).getTime()) / 1000 / 60; // in minutes
+
+        if (tokenAge < 5) {
+            return token;
+        }
+    }
+
+    const url = `https://teg.dev.pr/api/login/Basic`;
     const requestBody = JSON.stringify({
         username: 'customer',
         password: env.TESLA_PASSWORD,
@@ -23,7 +37,6 @@ async function login(env) {
         body: requestBody
     });
 
-
     if (!response.ok) {
         let errorData;
         try {
@@ -35,8 +48,11 @@ async function login(env) {
         console.error('Error during login:', errorData);
         throw new Error('Login failed');
     }
-    
-    return (await response.json()).token;
+
+    const newToken = (await response.json()).token;
+    await voltage.put('token', JSON.stringify({ token: newToken, timestamp: new Date().toISOString() }));
+
+    return newToken;
 }
 
 async function getMeterAggregates(token, env) {
