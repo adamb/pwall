@@ -14,7 +14,7 @@ const htmlContent = `
 
     <h2>Using Cloudflare to monitor a Tesla Energy Gateway</h2>
 
-    <p>One of the challenges of living in Puerto Rico is the flakey power system.  Our place has 51 solar
+    <p>One of the challenges of living in Puerto Rico is the flakey power system.  <a href="https://www.elnuevodia.com/noticias/gobierno/notas/pedro-pierluisi-ordena-investigar-el-apagon-del-miercoles-y-activa-la-guardia-nacional-esto-no-se-debe-repetir/">Read more about recent power issues here.</a> Our place has 51 solar
     panels and 4 powerwalls.  Even with this setup we are living on the edge at times.  We noticed that
     even when the grid is on, the lights flicker and appliances are stressed.  To get a handle on this 
     I decided to start collecting stats on the voltage.  The TEG (Tesla Energy Gateway) has an API so you
