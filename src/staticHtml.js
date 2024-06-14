@@ -31,18 +31,18 @@ const htmlContent = `
 
     <h2>Using Cloudflare and Aider</h2>
 
-    When I came up with this idea I had recently heard about Aider, a coding assistant.  I've built this
+    <p>When I came up with this idea I had recently heard about Aider, a coding assistant.  I've built this
     project using Aider to write most of the code.  Aider is pretty great and it's been an inspiration to me.
-    I'm going to post some more details about my experience using Aider in a future post.
+    I'm going to post some more details about my experience using Aider in a future post.</p>
 
-    The TEG has an API but to access it you have to be inside your LAN. To get around this I used a Cloudflare
-    tunnel.  This let's me securely expose the TEG but only to my code using a secret id and token.
+    <p>The TEG has an API but to access it you have to be inside your LAN. To get around this I used a Cloudflare
+    tunnel.  This let's me securely expose the TEG but only to my code using a secret id and token.</p>
 
-    I also used the Cloudflare workers and KV storage to keep track of the stats over time.  The voltages you 
+    <p>I also used the Cloudflare workers and KV storage to keep track of the stats over time.  The voltages you 
     see in voltage page are collected every two minute by a Cloudflare worker that logs into my TEG and grabs
-    stats every two minutes.
+    stats every two minutes.</p>
 
-    All the code for this is available in my git hub repo:  https://github.com/adamb/pwall
+    <p>All the code for this is available in my GitHub repo: <a href="https://github.com/adamb/pwall">https://github.com/adamb/pwall</a></p>
 
 </body>
 </html>
