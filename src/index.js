@@ -209,6 +209,9 @@ async function handleJson(env) {
         return new Response('No keys found in KV storage.', { status: 404 });
     }
 
+    // Remove the token key if it exists
+    allKeys = allKeys.filter(key => key.name !== 'token');
+
     // Get the last 5 keys
     const lastFiveKeys = allKeys.slice(-5);
 
