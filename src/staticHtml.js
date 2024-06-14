@@ -39,7 +39,7 @@ const htmlContent = `
     tunnel.  This let's me securely expose the TEG but only to my code using a secret id and token.</p>
 
     <p>I also used the Cloudflare workers and KV storage to keep track of the stats over time.  The voltages you 
-    see in voltage page are collected every two minute by a Cloudflare worker that logs into my TEG and grabs
+    see in <a href="/voltage">Voltage Data</a> page are collected every two minutes by a Cloudflare worker that logs into my TEG and grabs
     stats every two minutes.</p>
 
     <p>All the code for this is available in my GitHub repo: <a href="https://github.com/adamb/pwall">https://github.com/adamb/pwall</a></p>
