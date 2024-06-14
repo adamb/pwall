@@ -37,9 +37,7 @@ async function handleSOE(env) {
         const responseData = {
             ...systemStatus,
             currentUsage,
-            remainingHours
-            ...systemStatus,
-            currentUsage
+            remainingHours,
         };
         return new Response(JSON.stringify(responseData), {
             status: 200,
