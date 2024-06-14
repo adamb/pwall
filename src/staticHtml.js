@@ -32,8 +32,8 @@ const htmlContent = `
     <h2>Using Cloudflare and Aider</h2>
 
     <p>When I came up with this idea I had recently heard about <a href="https://aider.chat">Aider</a>, a coding assistant.  I've built this
-    project using <a href="https://aider.chat">Aider</a> to write most of the code.  <a href="https://aider.chat">Aider</a> is pretty great and it's been an inspiration to me.
-    I'm going to post some more details about my experience using <a href="https://aider.chat">Aider</a> in a future post.</p>
+    project using <a href="https://aider.chat">Aider</a> to write most of the code.  Aider is pretty great and it's been an inspiration to me.
+    I'm going to post some more details about my experience using Aider in a future post.</p>
 
     <p>The TEG has an API but to access it you have to be inside your LAN. To get around this I used a Cloudflare
     tunnel.  This let's me securely expose the TEG but only to my code using a secret id and token.</p>
