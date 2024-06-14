@@ -95,6 +95,21 @@ async function getMeterAggregates(token, env) {
 
 async function getSystemStatusSOE(env) {
 
+    const voltage = env.voltage;
+    if (!voltage) {
+        throw new Error('KV storage is not properly initialized.');
+    }
+
+    const cachedSOE = await voltage.get('system_status_soe');
+    if (cachedSOE) {
+        const { data, timestamp } = JSON.parse(cachedSOE);
+        const cacheAge = (Date.now() - new Date(timestamp).getTime()) / 1000 / 60; // in minutes
+
+        if (cacheAge < 5) {
+            return data;
+        }
+    }
+
     const token = await login(env);
 
     const url = 'https://teg.dev.pr/api/system_status/soe';
