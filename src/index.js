@@ -209,75 +209,46 @@ async function handleJson(env) {
         return new Response('No keys found in KV storage.', { status: 404 });
     }
 
+    // Get the last 5 keys
+    const lastFiveKeys = allKeys.slice(-5);
+
     const allKeysValues = {};
-    let getCalls = 0;
-    let getCallsResults = [];
-    const batchPromises = async (items, batchSize, fn) => {
-        const results = [];
-        for (let i = 0; i < items.length; i += batchSize) {
-            const batch = items.slice(i, i + batchSize).map(fn);
-            results.push(...await Promise.all(batch));
+    await Promise.all(lastFiveKeys.map(async (key) => {
+        const value = await voltage.get(key.name);
+        const parsedValue = JSON.parse(value);
+        if (parsedValue) {
+            allKeysValues[key.name] = parsedValue;
+        } else {
+            console.warn(`Parsed value for key ${key.name} is null`);
         }
-        return results;
-    };
+    }));
 
-    try {
-        getCallsResults = await batchPromises(allKeys, 6, async (key) => {
-            const value = await voltage.get(key.name);
-            const parsedValue = JSON.parse(value);
-            if (parsedValue) {
-                allKeysValues[key.name] = parsedValue;
-                return 1;
-            } else {
-                console.warn(`Parsed value for key ${key.name} is null`);
-                return 0;
-            }
-        });
-
-        getCalls = getCallsResults.reduce((acc, curr) => acc + curr, 0);
-
-        const jsonContent = JSON.stringify({ data: allKeysValues }, null, 2);
-        const htmlTemplate = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Voltage Data</title>
-        </head>
-        <body>
-            <h1>Voltage Data</h1>
-            <p>Total get calls: ${getCalls}</p>
-            <a href="data:text/json;charset=utf-8,${encodeURIComponent(jsonContent)}" download="voltage_data.json">Download JSON</a>
-        </body>
-        </html>
-        `;
-        return new Response(htmlTemplate, {
-            status: 200,
-            headers: {
-                'Content-Type': 'text/html'
-            }
-        });
-    } catch (error) {
-        console.error(`Error during get calls: ${error}`);
-        getCalls = getCallsResults.reduce((acc, curr) => acc + curr, 0);
-        const errorHtmlTemplate = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Error</title>
-        </head>
-        <body>
-            <h1>Error fetching data from KV storage</h1>
-            <p>Total get calls: ${getCalls}</p>
-            <pre>${JSON.stringify({ error: 'Error fetching data from KV storage.', getCalls }, null, 2)}</pre>
-        </body>
-        </html>
-        `;
-        return new Response(errorHtmlTemplate, { status: 500 });
-    }
+    const htmlTemplate = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Voltage Data</title>
+    </head>
+    <body>
+        <h1>Voltage Data</h1>
+        <ul>
+            ${Object.entries(allKeysValues).map(([key, value]) => `
+                <li>
+                    <strong>${key}</strong>: ${JSON.stringify(value)}
+                </li>
+            `).join('')}
+        </ul>
+    </body>
+    </html>
+    `;
+    return new Response(htmlTemplate, {
+        status: 200,
+        headers: {
+            'Content-Type': 'text/html'
+        }
+    });
 }
 
 async function handleFetch(request, env) {
