@@ -39,10 +39,26 @@ async function handleSOE(env) {
             currentUsage,
             remainingHours,
         };
-        return new Response(JSON.stringify(responseData), {
+        const htmlTemplate = `
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Battery Status</title>
+        </head>
+        <body>
+            <h1>Battery Status</h1>
+            <p>Current Usage: ${currentUsage} W</p>
+            <p>State of Energy (SOE): ${systemStatus.percentage}%</p>
+            <p>Remaining Hours at Current Usage Level: ${remainingHours.toFixed(2)} hours</p>
+        </body>
+        </html>
+        `;
+        return new Response(htmlTemplate, {
             status: 200,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'text/html'
             }
         });
     } catch (error) {
