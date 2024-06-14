@@ -218,8 +218,10 @@ async function handleJson(env) {
         const parsedValue = JSON.parse(value);
         if (parsedValue) {
             // Remove the token key if it exists
-            const { token, ...rest } = parsedValue;
-            allKeysValues[key.name] = rest;
+            if (parsedValue.token) {
+                delete parsedValue.token;
+            }
+            allKeysValues[key.name] = parsedValue;
         } else {
             console.warn(`Parsed value for key ${key.name} is null`);
         }
