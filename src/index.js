@@ -10,7 +10,7 @@
  * Learn more at https://developers.cloudflare.com/workers/runtime-apis/scheduled-event/
  */
 
-import { main, getSystemStatusSOE } from './pwall';
+import { main, getSystemStatusSOE, getCurrentUsage } from './pwall';
 import htmlContent from './staticHtml.js';
 import { getUTCToPuertoRicoISODate } from './utils';
 
@@ -29,7 +29,12 @@ async function handleSOE(env) {
     try {
         console.log('handleSOE')
         const systemStatus = await getSystemStatusSOE(env);
-        return new Response(JSON.stringify(systemStatus), {
+        const currentUsage = await getCurrentUsage(env);
+        const responseData = {
+            ...systemStatus,
+            currentUsage
+        };
+        return new Response(JSON.stringify(responseData), {
             status: 200,
             headers: {
                 'Content-Type': 'application/json'
