@@ -231,7 +231,7 @@ async function handleJson(env) {
     </head>
     <body>
         <h1>Voltage Data</h1>
-        <p>Here are the last five values returned from the TEG stats.</p>
+        <p>Here are the last five results returned from the TEG /api/meters/site. </p>
         <ul>
             ${Object.entries(allKeysValues).map(([key, value]) => `
                 <li>
