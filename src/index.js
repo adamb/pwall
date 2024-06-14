@@ -217,10 +217,6 @@ async function handleJson(env) {
         const value = await voltage.get(key.name);
         const parsedValue = JSON.parse(value);
         if (parsedValue) {
-            // Remove the token key if it exists
-            if (parsedValue.token) {
-                delete parsedValue.token;
-            }
             allKeysValues[key.name] = parsedValue;
         } else {
             console.warn(`Parsed value for key ${key.name} is null`);
