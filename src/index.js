@@ -48,7 +48,7 @@ async function handleSOE(env) {
             <title>Battery Status</title>
         </head>
         <body>
-            <h1>Battery Status</h1>
+            <h1>Finca del Mar Battery Status</h1>
             <p>Current Usage: ${currentUsage} W</p>
             <p>State of Energy (SOE): ${systemStatus.percentage}%</p>
             <p>Remaining Hours at Current Usage Level: ${remainingHours.toFixed(2)} hours</p>
