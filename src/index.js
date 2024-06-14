@@ -197,13 +197,8 @@ async function handleJson(env) {
     }
 
     let allKeys = [];
-    let cursor = null;
-
-    do {
-        const response = await voltage.list({ cursor });
-        allKeys = allKeys.concat(response.keys);
-        cursor = response.cursor;
-    } while (cursor);
+    const response = await voltage.list();
+    allKeys = response.keys;
 
     if (allKeys.length === 0) {
         return new Response('No keys found in KV storage.', { status: 404 });
