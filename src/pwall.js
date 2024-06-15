@@ -90,7 +90,6 @@ async function getMeterAggregates(token, env) {
     }
 
     const data = await response.json();
-    await voltage.put('system_status_soe', JSON.stringify({ data, timestamp: new Date().toISOString() }));
     return data;
 }
 
@@ -147,6 +146,8 @@ async function getSystemStatusSOE(env) {
     }
 
     const data = await response.json();
+    await voltage.put('system_status_soe', JSON.stringify({ data, timestamp: new Date().toISOString() }));
+
     return data;
 }
 
