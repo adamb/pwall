@@ -206,9 +206,8 @@ async function handleJson(env) {
         return new Response('No keys found in KV storage.', { status: 404 });
     }
 
-    // Remove the token key if it exists
-    allKeys = allKeys.filter(key => key.name !== 'token');
-    allKeys = allKeys.filter(key => key.name !== 'system_status_soe');
+    // Remove the token and system_status_soe keys if they exist
+    allKeys = allKeys.filter(key => key.name !== 'token' && key.name !== 'system_status_soe');
 
 
     // Get the last 5 keys
