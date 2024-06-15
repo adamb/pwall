@@ -208,6 +208,8 @@ async function handleJson(env) {
 
     // Remove the token key if it exists
     allKeys = allKeys.filter(key => key.name !== 'token');
+    allKeys = allKeys.filter(key => key.name !== 'system_status_soe');
+
 
     // Get the last 5 keys
     const lastFiveKeys = allKeys.slice(-5);
