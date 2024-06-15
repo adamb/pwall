@@ -11,8 +11,7 @@
  */
 
 import { main, getSystemStatusSOE, getCurrentUsage } from './pwall';
-import htmlContent from './staticHtml.js';
-import { getUTCToPuertoRicoISODate } from './utils';
+import { handleFetch } from './handleFetch';
 
 
 export default {
