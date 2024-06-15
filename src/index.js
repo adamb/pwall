@@ -34,7 +34,12 @@ async function handleSOE(env) {
         const currentUsage = await getCurrentUsage(env);
         const totalCapacityKWh = 4 * 13; // 4 Powerwalls, each with 13 kWh capacity
         const remainingEnergyKWh = (systemStatus.percentage / 100) * totalCapacityKWh;
-        const remainingHours = remainingEnergyKWh / (currentUsage / 1000); // currentUsage is in watts, convert to kW
+        let remainingHours;
+        if (currentUsage < 0) {
+            remainingHours = "Must be sunny, generating more power than you're using";
+        } else {
+            remainingHours = remainingEnergyKWh / (currentUsage / 1000); // currentUsage is in watts, convert to kW
+        }
 
         const responseData = {
             ...systemStatus,
