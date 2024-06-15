@@ -23,6 +23,8 @@ export default {
 	},
 };
 
+export { handleSOE };
+
 
 async function handleSOE(env) {
     try {
