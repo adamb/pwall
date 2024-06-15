@@ -12,7 +12,7 @@ async function login(env) {
         const { token, timestamp } = JSON.parse(tokenData);
         const tokenAge = (Date.now() - new Date(timestamp).getTime()) / 1000 / 60; // in minutes
 
-        if (tokenAge < 5) {
+        if (tokenAge < 60) {
             return token;
         }
     }
