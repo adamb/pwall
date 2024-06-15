@@ -23,7 +23,7 @@ export default {
 	},
 };
 
-export { handleSOE, handleJson };
+export { handleSOE, handleJson, handleVoltage };
 
 
 async function handleSOE(env) {
