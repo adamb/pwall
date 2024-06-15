@@ -53,12 +53,15 @@ async function handleSOE(env) {
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Battery Status</title>
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         </head>
-        <body>
-            <h1>Finca del Mar Battery Status</h1>
-            <p>Current Usage: ${(currentUsage / 1000).toFixed(2)} kW</p>
-            <p>State of Energy (SOE): ${systemStatus.percentage}%</p>
-            <p>Remaining Hours at Current Usage Level: ${typeof remainingHours === 'string' ? remainingHours : remainingHours.toFixed(2)} hours</p>
+        <body class="bg-light">
+            <div class="container mt-5">
+                <h1 class="mb-4">Finca del Mar Battery Status</h1>
+                <p>Current Usage: ${(currentUsage / 1000).toFixed(2)} kW</p>
+                <p>State of Energy (SOE): ${systemStatus.percentage}%</p>
+                <p>Remaining Hours at Current Usage Level: ${typeof remainingHours === 'string' ? remainingHours : remainingHours.toFixed(2)} hours</p>
+            </div>
         </body>
         </html>
         `;
