@@ -41,6 +41,9 @@ async function handleSOE(env) {
             remainingHours = remainingEnergyKWh / (currentUsage / 1000); // currentUsage is in watts, convert to kW
         }
 
+        // Fix for -0 issue
+        const formattedCurrentUsage = (currentUsage / 1000).toFixed(2).replace('-0.00', '0.00');
+
         const responseData = {
             ...systemStatus,
             currentUsage,
@@ -58,7 +61,7 @@ async function handleSOE(env) {
         <body class="bg-light">
             <div class="container mt-5">
                 <h1 class="mb-4">Finca del Mar Battery Status</h1>
-                <p>Current Usage: ${(currentUsage / 1000).toFixed(2)} kW</p>
+                <p>Current Usage: ${formattedCurrentUsage} kW</p>
                 <p>State of Energy (SOE): ${systemStatus.percentage.toFixed(1)}%</p>
                 <p>Remaining Hours: ${typeof remainingHours === 'string' ? remainingHours : remainingHours.toFixed(1)} hours</p>
             </div>
