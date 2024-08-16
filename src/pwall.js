@@ -207,8 +207,7 @@ async function getCurrentUsage(env) {
         throw new Error('Invalid data format in KV storage.');
     }
 
-    // Fix for -0 issue
-    return parsedValue.instant_power === 0 ? 0 : parsedValue.instant_power;
+    return parsedValue.instant_power;
 }
 
 module.exports = {
