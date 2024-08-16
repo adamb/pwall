@@ -42,7 +42,7 @@ async function handleSOE(env) {
         }
 
         // Fix for -0 issue
-        const formattedCurrentUsage = (currentUsage / 1000).toFixed(2).replace('-0.00', '0.00');
+        const formattedCurrentUsage = (currentUsage / 1000).toFixed(2).replace('-0.00', '0.00').replace('-0', '0');
 
         const responseData = {
             ...systemStatus,

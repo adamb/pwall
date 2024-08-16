@@ -9,7 +9,7 @@ binding = "voltage"
 id = "35d9ba93bccd4316b27a48bc72ceddad"
 
 [triggers]
-crons = ["*/2 * * * *"] # This cron expression schedules the worker to run every 5 minutes
+crons = ["*/2 * * * *"] # This cron expression schedules the worker to run every 2 minutes
 
 [env.dev]
 kv_namespaces = [ 
