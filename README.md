@@ -12,9 +12,13 @@ The cron worker is responsible for periodically fetching data from the Powerwall
 ### How to Run the Cron Worker
 
 1. **Development**: 
-   - Run `wrangler dev --local` in your terminal to start a development server.
-   - Trigger the scheduled event with `curl "http://localhost:8787/cdn-cgi/mf/scheduled"`.
+   - Run `wrangler dev --test-scheduled --log-level info` in your terminal to start a development server.  This will say that it doesn't support cron triggers.  So you have to trigger it manually with curl.
+   - In another terminal run `curl "http://localhost:8787/__scheduled?cron=*+*+*+*+*"`
    - Check the console for logs.
+   - Note the KV store for dev is not the kv store for production
+   - You can then open a browser from the wranger window and see the page
+
+
 
 2. **Production**:
    - Update the Cron trigger in `wrangler.toml` (see [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/wrangler/configuration/#triggers)).
