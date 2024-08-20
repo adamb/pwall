@@ -211,11 +211,19 @@ async function handleJson(env) {
 
     const currentDate = new Date();
     const currentHourISO = getUTCToPuertoRicoISODate(currentDate).slice(0, 13); // Get the current date and hour in ISO format
+    let allKeys = [];
     const currentHourKeys = await voltage.list({ prefix: currentHourISO });
-    const allKeys = currentHourKeys.keys || [];
+    allKeys = currentHourKeys.keys || [];
 
     if (allKeys.length === 0) {
-        return new Response('No keys found in KV storage.', { status: 404 });
+        const previousHourDate = new Date(currentDate.getTime() - 60 * 60 * 1000);
+        const previousHourISO = getUTCToPuertoRicoISODate(previousHourDate).slice(0, 13);
+        const previousHourKeys = await voltage.list({ prefix: previousHourISO });
+        allKeys = previousHourKeys.keys || [];
+
+        if (allKeys.length === 0) {
+            return new Response('No keys found in KV storage.', { status: 404 });
+        }
     }
 
     // Remove the token and system_status_soe keys if they exist
