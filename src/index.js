@@ -220,9 +220,11 @@ async function handleJson(env) {
     // Remove the token and system_status_soe keys if they exist
     allKeys = allKeys.filter(key => key.name !== 'token' && key.name !== 'system_status_soe');
 
+    // Sort the keys by timestamp in descending order
+    allKeys.sort((a, b) => new Date(b.name) - new Date(a.name));
 
     // Get the last 5 keys
-    const lastFiveKeys = allKeys.slice(-5);
+    const lastFiveKeys = allKeys.slice(0, 5);
 
     const allKeysValues = {};
     await Promise.all(lastFiveKeys.map(async (key) => {
