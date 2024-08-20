@@ -209,9 +209,10 @@ async function handleJson(env) {
         return new Response('KV storage is not properly initialized.', { status: 500 });
     }
 
-    let allKeys = [];
-    const response = await voltage.list();
-    allKeys = response.keys;
+    const currentDate = new Date();
+    const currentHourISO = getUTCToPuertoRicoISODate(currentDate).slice(0, 13); // Get the current date and hour in ISO format
+    const currentHourKeys = await voltage.list({ prefix: currentHourISO });
+    const allKeys = currentHourKeys.keys || [];
 
     if (allKeys.length === 0) {
         return new Response('No keys found in KV storage.', { status: 404 });
