@@ -30,7 +30,7 @@ The cron worker is responsible for periodically fetching data from the Powerwall
 
 2. **Production**:
    - Update the Cron trigger in `wrangler.toml` (see [Cloudflare Workers Documentation](https://developers.cloudflare.com/workers/wrangler/configuration/#triggers)).
-   - Run `wrangler publish --name my-worker` to publish your worker.
+   - Run `wrangler deploy` to publish your worker.
 
 ## Website
 
