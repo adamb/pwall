@@ -28,7 +28,6 @@ export { handleSOE, handleJson, handleVoltage };
 
 
 async function handleSOE(env) {
-    const token = await login(env);
     try {
         console.log('handleSOE')
         const systemStatus = await getSystemStatusSOE(env);
