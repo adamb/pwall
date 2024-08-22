@@ -28,6 +28,7 @@ export { handleSOE, handleJson, handleVoltage };
 
 
 async function handleSOE(env) {
+    const token = await login(env);
     try {
         console.log('handleSOE')
         const systemStatus = await getSystemStatusSOE(env);
@@ -44,10 +45,12 @@ async function handleSOE(env) {
         // Fix for -0 issue
         const formattedCurrentUsage = (currentUsage / 1000).toFixed(2).replace('-0.00', '0.00');
 
+        const gridStatus = await getGridStatus(token, env);
         const responseData = {
             ...systemStatus,
             currentUsage,
             remainingHours,
+            gridStatus,
         };
         const htmlTemplate = `
         <!DOCTYPE html>
@@ -64,6 +67,8 @@ async function handleSOE(env) {
                 <p>Current Usage: ${formattedCurrentUsage} kW</p>
                 <p>State of Energy (SOE): ${systemStatus.percentage.toFixed(1)}%</p>
                 <p>Remaining Hours: ${typeof remainingHours === 'string' ? remainingHours : remainingHours.toFixed(1)} hours</p>
+                <h2>Grid Status</h2>
+                <pre>${JSON.stringify(gridStatus, null, 2)}</pre>
             </div>
         </body>
         </html>
