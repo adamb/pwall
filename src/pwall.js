@@ -93,6 +93,44 @@ async function getMeterAggregates(token, env) {
     return data;
 }
 
+async function getGridStatus(token, env) {
+    const url = 'https://teg.dev.pr/api/system_status/grid_status';
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
+        'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET,
+        'Authorization': `Bearer ${token}`
+    };
+
+    const response = await fetch(url, {
+        method: 'GET',
+        headers: headers
+    });
+
+    if (!response.ok) {
+        console.error('Error fetching grid status:', {
+            status: response.status,
+            statusText: response.statusText,
+            headers: [...response.headers.entries()],
+        });
+
+        let errorData;
+        try {
+            errorData = await response.json();
+        } catch (jsonError) {
+            console.error('Error parsing JSON response:', jsonError, 'Response:', response);
+            throw new Error('Failed to fetch grid status and error response could not be parsed');
+        }
+
+        console.error('Error data:', errorData);
+        throw new Error('Failed to fetch grid status');
+    }
+
+    const data = await response.json();
+    return data;
+}
+
 async function getSystemStatusSOE(env) {
 
     // Return the battery level, but cache it so we don't hit the api too often.  
