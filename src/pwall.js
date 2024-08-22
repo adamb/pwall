@@ -95,6 +95,11 @@ async function getMeterAggregates(token, env) {
 
 async function getSystemStatusSOE(env) {
 
+    // Return the battery level, but cache it so we don't hit the api too often.  
+    // the voltage level is stored in the kv along with a timestamp.  if it ahs
+    // been more than 5 minutes, it hits the api again, otherwise it returns the cached data
+    // this way if the web page is hit a bunch, it won't bang on the TEG api
+
     const voltage = env.voltage;
     if (!voltage) {
         throw new Error('KV storage is not properly initialized.');
