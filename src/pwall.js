@@ -93,7 +93,8 @@ async function getMeterAggregates(token, env) {
     return data;
 }
 
-async function getGridStatus(token, env) {
+async function getGridStatus(env) {
+    const token = await login(env);
     const url = 'https://teg.dev.pr/api/system_status/grid_status';
 
     const headers = {
