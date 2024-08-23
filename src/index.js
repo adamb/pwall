@@ -63,13 +63,13 @@ async function handleSOE(env) {
         <body class="bg-light">
             <div class="container mt-5">
                 <h1 class="mb-4">Finca del Mar Battery Status</h1>
-                <ul>
-                    <li>Current Usage: ${formattedCurrentUsage} kW</li>
-                    <li>State of Energy (SOE): ${systemStatus.percentage.toFixed(1)}%</li>
-                    <li>Remaining Hours: ${typeof remainingHours === 'string' ? remainingHours : remainingHours.toFixed(1)} hours</li>
+                <ul style="list-style-type: none; padding-left: 5;">
+                    <li><strong>Current Usage:</strong> ${formattedCurrentUsage} kW</li>
+                    <li><strong>State of Energy (SOE):</strong> ${systemStatus.percentage.toFixed(1)}%</li>
+                    <li><strong>Remaining Hours:</strong> ${typeof remainingHours === 'string' ? remainingHours : remainingHours.toFixed(1)} hours</li>
                 </ul>
                 <h2>Grid Status</h2>
-                <ul style="list-style-type: none; padding-left: 10;">
+                <ul style="list-style-type: none; padding-left: 5;">
                     ${Object.entries(gridStatus).map(([key, value]) => `
                         <li>
                             <strong>${key}:</strong> 
