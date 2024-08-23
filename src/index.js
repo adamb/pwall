@@ -80,6 +80,17 @@ async function handleSOE(env) {
                     `).join('')}
                 </ul>
             </div>
+                <h2>Grid Status Values</h2>
+                <p>In the Tesla Powerwall API, the <code>grid_status</code> endpoint can return the following values:</p>
+                <ol>
+                    <li><strong><code>SystemGridConnected</code></strong>: The system is connected to the grid.</li>
+                    <li><strong><code>SystemIslandedActive</code></strong>: The system is not connected to the grid and is operating in an islanded mode (off-grid).</li>
+                    <li><strong><code>SystemTransitionToGrid</code></strong>: The system is transitioning from an off-grid state back to being connected to the grid.</li>
+                    <li><strong><code>SystemTransitionToIsland</code></strong>: The system is transitioning from being connected to the grid to operating off-grid (islanding).</li>
+                    <li><strong><code>SystemGridFault</code></strong>: There is a fault detected with the grid connection.</li>
+                </ol>
+                <p>These values indicate the current state of the Powerwall system in relation to the grid connection.</p>
+            </div>
         </body>
         </html>
         `;
