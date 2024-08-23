@@ -93,8 +93,26 @@ async function getMeterAggregates(token, env) {
     return data;
 }
 
-async function getGridStatus(env) {
-    const token = await login(env);
+async function getGridStatus(env, token = null) {
+
+    // check for cached grid status
+    const voltage = env.voltage;
+    if (!voltage) {
+        throw new Error('KV storage is not properly initialized.');
+    }
+
+    const cachedStatus = await voltage.get('gridStatus:current');
+    if (cachedStatus) {
+        const { data, timestamp } = JSON.parse(cachedStatus);
+        const cacheAge = (Date.now() - new Date(timestamp).getTime()) / 1000 / 60; // in minutes
+
+        if (cacheAge < 1) {
+            return data;
+        }
+    }
+
+    // get login token if not provided
+    if (token === null) token = await login(env);
     const url = 'https://teg.dev.pr/api/system_status/grid_status';
 
     const headers = {
@@ -129,6 +147,10 @@ async function getGridStatus(env) {
     }
 
     const data = await response.json();
+    await voltage.put('gridStatus:current', data);
+    await KV.put(`gridStatus:${Date().toISOString()}`, data);
+
+
     return data;
 }
 
@@ -206,6 +228,9 @@ async function main(env) {
 
 
         const meterData = await getMeterAggregates(token, env);
+        const gridData = await getGridStatus(env, token);
+
+        console.log(gridData)
 
         // Print the entire meterData object
         if (meterData && meterData[0].Cached_readings) {
