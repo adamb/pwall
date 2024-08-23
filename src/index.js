@@ -69,7 +69,12 @@ async function handleSOE(env) {
                 <h2>Grid Status</h2>
                 <ul>
                     ${Object.entries(gridStatus).map(([key, value]) => `
-                        <li><strong>${key}:</strong> ${value}</li>
+                        <li>
+                            <strong>${key}:</strong> 
+                            <span style="color: ${key === 'grid_status' && value !== 'SystemGridConnected' ? 'red' : 'green'};">
+                                ${value}
+                            </span>
+                        </li>
                     `).join('')}
                 </ul>
             </div>
