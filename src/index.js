@@ -80,17 +80,17 @@ async function handleSOE(env) {
                     `).join('')}
                 </ul>
             </div>
-            <div class="card mt-4 mx-5">
+            <div class="card mt-3 mx-4" style="font-size: 0.9rem;">
                 <div class="card-body">
-                    <h2 class="card-title">Grid Status Values</h2>
+                    <h4 class="card-title">Grid Status Values</h4>
                     <p class="card-text">In the Tesla Powerwall API, the <code>grid_status</code> endpoint can return the following values:</p>
-                    <ol>
-                        <li><strong><code>SystemGridConnected</code></strong>: The system is connected to the grid.</li>
-                        <li><strong><code>SystemIslandedActive</code></strong>: The system is not connected to the grid and is operating in an islanded mode (off-grid).</li>
-                        <li><strong><code>SystemTransitionToGrid</code></strong>: The system is transitioning from an off-grid state back to being connected to the grid.</li>
-                        <li><strong><code>SystemTransitionToIsland</code></strong>: The system is transitioning from being connected to the grid to operating off-grid (islanding).</li>
-                        <li><strong><code>SystemGridFault</code></strong>: There is a fault detected with the grid connection.</li>
-                    </ol>
+                    <ul>
+                        <li><code>SystemGridConnected</code>: The system is connected to the grid.</li>
+                        <li><code>SystemIslandedActive</code>: The system is not connected to the grid and is operating in an islanded mode (off-grid).</li>
+                        <li><code>SystemTransitionToGrid</code>: The system is transitioning from an off-grid state back to being connected to the grid.</li>
+                        <li><code>SystemTransitionToIsland</code>: The system is transitioning from being connected to the grid to operating off-grid (islanding).</li>
+                        <li><code>SystemGridFault</code>: There is a fault detected with the grid connection.</li>
+                    </ul>
                     <p class="card-text">These values indicate the current state of the Powerwall system in relation to the grid connection.</p>
                 </div>
             </div>
