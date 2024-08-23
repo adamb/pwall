@@ -257,7 +257,8 @@ async function getCurrentUsage(env) {
 module.exports = {
     getCurrentUsage,
     main,
-    getSystemStatusSOE
+    getSystemStatusSOE,
+    getGridStatus
 };
 
 

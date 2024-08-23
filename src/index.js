@@ -10,7 +10,7 @@
  * Learn more at https://developers.cloudflare.com/workers/runtime-apis/scheduled-event/
  */
 
-import { main, getSystemStatusSOE, getCurrentUsage } from './pwall';
+import { main, getSystemStatusSOE, getCurrentUsage, getGridStatus } from './pwall';
 import { handleFetch } from './handleFetch';
 import { getUTCToPuertoRicoISODate } from './utils';
 
@@ -80,7 +80,7 @@ async function handleSOE(env) {
         });
     } catch (error) {
         console.error('Error fetching system status:', error);
-        return new Response('Failed to fetch system status', { status: 500 });
+        return new Response('Failed to fetch grid status', { status: 500 });
     }
 }
 
