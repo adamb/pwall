@@ -62,25 +62,29 @@ async function handleSOE(env) {
         </head>
         <body class="bg-light">
             <div class="container mt-5">
-                <h1 class="mb-4">Finca del Mar Battery Status</h1>
-                <ul style="list-style-type: none; padding-left: 5;">
-                    <li><strong>Current Usage:</strong> ${formattedCurrentUsage} kW</li>
-                    <li><strong>State of Energy (SOE):</strong> ${systemStatus.percentage.toFixed(1)}%</li>
-                    <li><strong>Remaining Hours:</strong> ${typeof remainingHours === 'string' ? remainingHours : remainingHours.toFixed(1)} hours</li>
-                </ul>
-                <h2>Grid Status</h2>
-                <ul style="list-style-type: none; padding-left: 5;">
-                    ${Object.entries(gridStatus).map(([key, value]) => `
-                        <li>
-                            <strong>${key}:</strong> 
-                            <span style="color: ${key === 'grid_status' && value !== 'SystemGridConnected' ? 'red' : 'green'};">
-                                ${value}
-                            </span>
-                        </li>
-                    `).join('')}
-                </ul>
+                <h1 class="mb-4 text-center">Finca del Mar Battery Status</h1>
+                <div class="card mt-3 mx-auto" style="max-width: 600px;">
+                    <div class="card-body">
+                        <ul style="list-style-type: none; padding-left: 5;">
+                            <li><strong>Current Usage:</strong> ${formattedCurrentUsage} kW</li>
+                            <li><strong>State of Energy (SOE):</strong> ${systemStatus.percentage.toFixed(1)}%</li>
+                            <li><strong>Remaining Hours:</strong> ${typeof remainingHours === 'string' ? remainingHours : remainingHours.toFixed(1)} hours</li>
+                        </ul>
+                        <h2>Grid Status</h2>
+                        <ul style="list-style-type: none; padding-left: 5;">
+                            ${Object.entries(gridStatus).map(([key, value]) => `
+                                <li>
+                                    <strong>${key}:</strong> 
+                                    <span style="color: ${key === 'grid_status' && value !== 'SystemGridConnected' ? 'red' : 'green'};">
+                                        ${value}
+                                    </span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>
             </div>
-            <div class="card mt-3 mx-4" style="font-size: 0.9rem; margin-left: 20px; padding-left: 20px;">
+            <div class="card mt-3 mx-auto" style="max-width: 600px; font-size: 0.9rem;">
                 <div class="card-body">
                     <h4 class="card-title">Grid Status Values</h4>
                     <p class="card-text">In the Tesla Powerwall API, the <code>grid_status</code> endpoint can return the following values:</p>
