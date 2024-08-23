@@ -80,7 +80,7 @@ async function handleSOE(env) {
                     `).join('')}
                 </ul>
             </div>
-            <div class="card mt-3 mx-4" style="font-size: 0.9rem;">
+            <div class="card mt-3 mx-4" style="font-size: 0.9rem; margin-left: 20px;">
                 <div class="card-body">
                     <h4 class="card-title">Grid Status Values</h4>
                     <p class="card-text">In the Tesla Powerwall API, the <code>grid_status</code> endpoint can return the following values:</p>
