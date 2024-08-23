@@ -147,8 +147,8 @@ async function getGridStatus(env, token = null) {
     }
 
     const data = await response.json();
-    await voltage.put('gridStatus:current', data);
-    await KV.put(`gridStatus:${Date().toISOString()}`, data);
+    await voltage.put('gridStatus:current', JSON.stringify(data));
+    await voltage.put(`gridStatus:${new Date().toISOString()}`, JSON.stringify(data));
 
 
     return data;
