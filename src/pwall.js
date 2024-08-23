@@ -195,6 +195,9 @@ async function getSystemStatusSOE(env) {
     return data;
 }
 
+// this is the main worker function that is called every few minutes
+// it stores the meter data in the kv
+
 async function main(env) {
     try {
         const token = await login(env);

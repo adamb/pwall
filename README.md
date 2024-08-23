@@ -44,10 +44,33 @@ The website displays the statistics collected by the cron worker. It provides a 
 - `src/`: Contains the source code for the worker and website.
   - `index.js`: Entry point for the Cloudflare Worker.
   - `pwall.js`: Contains functions for interacting with the Powerwall API.
+    - main() is called every 2 minutes as a cron job
   - `handleFetch.js`: Handles fetch requests.
   - `utils.js`: Utility functions.
 - `dist/`: Contains built output assets.
 - `wrangler.toml`: Configuration file for Cloudflare Workers.
+
+## KV Store
+
+There is a kv store called Voltage.  It has keys that are the current timestamp in Puerto Rico.
+
+Like this:
+Key:
+```json
+2024-08-23T04:00:56.249100391-04:00
+```
+
+Value:
+```json
+{"last_communication_time":"2024-08-23T04:00:56.37401349-04:00","instant_power":2996.5771484375,"instant_reactive_power":-2734.77197265625,"instant_apparent_power":4056.9018165299462,"frequency":60.178279876708984,"energy_exported":18130173.742195815,"energy_imported":67184214.25052916,"instant_average_voltage":124.6713752746582,"instant_average_current":0,"i_a_current":0,"i_b_current":0,"i_c_current":0,"last_phase_voltage_communication_time":"2024-08-23T04:00:56.249100391-04:00","v_l1n":124.57781982421875,"v_l2n":124.73319244384766,"last_phase_power_communication_time":"2024-08-23T04:00:56.37401349-04:00","real_power_a":1474.3201904296875,"real_power_b":1522.2569580078125,"reactive_power_a":-1342.1256103515625,"reactive_power_b":-1392.6463623046875,"last_phase_energy_communication_time":"2024-08-23T03:57:40.917000113-04:00","energy_exported_a":9307998.705833333,"energy_exported_b":9626203.48888889,"energy_imported_a":33645897.54416667,"energy_imported_b":34342090.52944444,"serial_number":"OBB3545100913","version":"67994(1.4.6-Tesla)","timeout":1500000000,"instant_total_current":0}
+```
+
+There is also a single key called `system_status_soe` that just holds the most recent battery level.
+
+and I'm adding a key for gridStatus. It will be `gridStatus:current` for the most recent reading.  Then gridStatus:timestamp where the timestamp is the time at the reading.  These will be in UTC since the timestamps don't come from the TEG.
+
+
+
 
 ## License
 
