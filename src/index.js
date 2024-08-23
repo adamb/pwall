@@ -85,8 +85,8 @@ async function handleSOE(env) {
                     </div>
                 </div>
             </div>
-            <div class="card mt-3 mx-auto" style="max-width: 600px; font-size: 0.9rem;">
-                <div class="card-body">
+            <div class="card mt-3 mx-auto" style="max-width: 600px; font-size: 0.9rem; background-color: #f8f9fa;">
+                <div class="card-body text-secondary">
                     <h4 class="card-title">Grid Status Values</h4>
                     <p class="card-text">In the Tesla Powerwall API, the <code>grid_status</code> endpoint can return the following values:</p>
                     <ul>
