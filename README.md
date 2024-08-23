@@ -18,6 +18,9 @@ The cron worker is responsible for periodically fetching data from the Powerwall
 
 ### How to Run the Cron Worker
 
+0. **Make sure wrangler is up to do date**:
+   - % npm install -g wrangler
+
 1. **Development**: 
    - Run `wrangler dev --test-scheduled --log-level info` in your terminal to start a development server.  This will say that it doesn't support cron triggers.  So you have to trigger it manually with curl.
    - In another terminal run `curl "http://localhost:8787/__scheduled?cron=*+*+*+*+*"`
