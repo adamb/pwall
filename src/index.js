@@ -65,6 +65,7 @@ async function handleSOE(env) {
                 <h1 class="mb-4 text-center">Finca del Mar Battery Status</h1>
                 <div class="card mt-3 mx-auto" style="max-width: 600px;">
                     <div class="card-body">
+                        <h2>Battery Status</h2>
                         <ul style="list-style-type: none; padding-left: 5;">
                             <li><strong>Current Usage:</strong> ${formattedCurrentUsage} kW</li>
                             <li><strong>State of Energy (SOE):</strong> ${systemStatus.percentage.toFixed(1)}%</li>

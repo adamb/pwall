@@ -8,9 +8,8 @@ This repository contains two main components:
 ## Todo
 
 1. Add some kind of tests.  Use some of the historical data for testing.  I have stats from during the outage, so can use those.  Aug 14 - 18 2024 should work.  on grid to off grid.  
-2. add grid on/off status
+2. add caching for grid status?
 3. Add alerts or notifications PWA style or SMS/email maybe
-4. pwall.dev.pr/json showing data from June 2024?? (check logs?, check cloud)
 
 
 ## Cron Worker
