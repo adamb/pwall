@@ -101,6 +101,7 @@ async function getGridStatus(env, token = null) {
         throw new Error('KV storage is not properly initialized.');
     }
 
+    // cache the status for at least one minute
     const cachedStatus = await voltage.get('gridStatus:current');
     if (cachedStatus) {
         const { data, timestamp } = JSON.parse(cachedStatus);
@@ -149,11 +150,13 @@ async function getGridStatus(env, token = null) {
     const data = await response.json();
     const timestamp = new Date().toISOString();
     
+    // always update the current status with the current timestamp
+    await voltage.put('gridStatus:current', JSON.stringify({ data, timestamp }));
+    // only update the timestamped status if it's different
     if (!cachedStatus || JSON.stringify(data) !== JSON.stringify(JSON.parse(cachedStatus).data)) {
-        await voltage.put('gridStatus:current', JSON.stringify({ data, timestamp }));
         await voltage.put(`gridStatus:${timestamp}`, JSON.stringify(data));
+        console.log('new grid status')
     }
-
 
     return data;
 }
@@ -233,8 +236,6 @@ async function main(env) {
 
         const meterData = await getMeterAggregates(token, env);
         const gridData = await getGridStatus(env, token);
-
-        console.log(gridData)
 
         // Print the entire meterData object
         if (meterData && meterData[0].Cached_readings) {
