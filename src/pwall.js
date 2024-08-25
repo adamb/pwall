@@ -108,6 +108,7 @@ async function getGridStatus(env, token = null) {
         const cacheAge = (Date.now() - new Date(timestamp).getTime()) / 1000 / 60; // in minutes
 
         if (cacheAge < 1) {
+            console.log('Using cached grid status');
             return data;
         }
     }
