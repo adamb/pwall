@@ -254,7 +254,7 @@ async function main(env) {
             console.log(`Last Update Time (raw): ${lastUpdateTime}`);
             console.log(`Grid Voltage L1: ${cachedReadings.v_l1n} V`);
             console.log(`Grid Voltage L2: ${cachedReadings.v_l2n} V`);
-            console.log(gridData.)
+            console.log('Grid Data:', gridData);
 
         } else {
             console.error('Error: Cached_readings not found in meterData');
