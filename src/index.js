@@ -57,49 +57,43 @@ async function handleSOE(env) {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Battery Status</title>
+            <title>Powerwall Stats - No Longer Functional</title>
             <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
         </head>
         <body class="bg-light">
             <div class="container mt-5">
-                <h1 class="mb-4 text-center">Finca del Mar Battery Status</h1>
+                <h1 class="mb-4 text-center text-danger">Finca del Mar Battery Status</h1>
+                <div class="alert alert-danger mx-auto" style="max-width: 600px;" role="alert">
+                    <h4 class="alert-heading">Project No Longer Functional</h4>
+                    <p>This Tesla Powerwall monitoring system is no longer operational.</p>
+                    <hr>
+                    <p class="mb-0"><strong>Reason:</strong> Tesla changed their authentication method and this code no longer works with the updated Tesla Gateway API.</p>
+                </div>
                 <div class="card mt-3 mx-auto" style="max-width: 600px;">
                     <div class="card-body">
-                        <h2>Battery Status</h2>
-                        <ul style="list-style-type: none; padding-left: 5;">
-                            <li><strong>Current Usage:</strong> ${formattedCurrentUsage} kW</li>
-                            <li><strong>State of Energy (SOE):</strong> ${systemStatus.percentage.toFixed(1)}%</li>
-                            <li><strong>Remaining Hours:</strong> ${typeof remainingHours === 'string' ? remainingHours : remainingHours.toFixed(1)} hours</li>
+                        <h5 class="card-title">About This Project</h5>
+                        <p class="card-text">This was a Cloudflare Worker that monitored Tesla Powerwall statistics by:</p>
+                        <ul>
+                            <li>Fetching data from the Tesla Gateway every 2 minutes via cron job</li>
+                            <li>Storing power usage, battery status, and grid connectivity data</li>
+                            <li>Displaying real-time statistics and voltage charts</li>
                         </ul>
-                        <h2>Grid Status</h2>
-                        <ul style="list-style-type: none; padding-left: 5;">
-                            ${Object.entries(gridStatus).map(([key, value]) => `
-                                <li>
-                                    <strong>${key}:</strong> 
-                                    <span style="color: ${key === 'grid_status' && value !== 'SystemGridConnected' ? 'red' : 'green'};">
-                                        ${value}
-                                    </span>
-                                </li>
-                            `).join('')}
+                        <p class="card-text"><small class="text-muted">The repository is kept for posterity and reference.</small></p>
+                    </div>
+                </div>
+                <div class="card mt-3 mx-auto" style="max-width: 600px; font-size: 0.9rem; background-color: #e2e3e5;">
+                    <div class="card-body text-secondary">
+                        <h6 class="card-title">Previous Functionality</h6>
+                        <p class="card-text">This system previously tracked:</p>
+                        <ul class="small">
+                            <li><strong>Battery Status:</strong> State of Energy (SOE), current usage, estimated remaining hours</li>
+                            <li><strong>Grid Status:</strong> Connection state, transitions, and fault detection</li>
+                            <li><strong>Voltage Monitoring:</strong> L1-N and L2-N voltage readings over time</li>
+                            <li><strong>Historical Data:</strong> Stored in Cloudflare KV with Puerto Rico timezone timestamps</li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="card mt-3 mx-auto" style="max-width: 600px; font-size: 0.9rem; background-color: #e2e3e5;">
-                <div class="card-body text-secondary">
-                    <h4 class="card-title">Grid Status Values</h4>
-                    <p class="card-text">In the Tesla Powerwall API, the <code>grid_status</code> endpoint can return the following values:</p>
-                    <ul>
-                        <li><code>SystemGridConnected</code>: The system is connected to the grid.</li>
-                        <li><code>SystemIslandedActive</code>: The system is not connected to the grid and is operating in an islanded mode (off-grid).</li>
-                        <li><code>SystemTransitionToGrid</code>: The system is transitioning from an off-grid state back to being connected to the grid.</li>
-                        <li><code>SystemTransitionToIsland</code>: The system is transitioning from being connected to the grid to operating off-grid (islanding).</li>
-                        <li><code>SystemGridFault</code>: There is a fault detected with the grid connection.</li>
-                    </ul>
-                    <p class="card-text">These values indicate the current state of the Powerwall system in relation to the grid connection.</p>
-                </div>
-            </div>
-        </div>
         </body>
         </html>
         `;

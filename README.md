@@ -1,5 +1,15 @@
 # Powerwall Stats and Website
 
+
+## This code is no longer functional
+
+Tesla changed their authentication method and now this code won't work any longer.  
+
+Keeping the repo around for posterity I suppose.
+
+## Old info...
+
+
 This repository contains two main components:
 
 1. **Cron Worker**: A scheduled worker that grabs statistics from the Powerwall.
